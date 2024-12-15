@@ -14,8 +14,8 @@ def main(argv):
     binaries = ["SDL3", "SDL3_image", "SDL3_mixer", "SDL3_net", "SDL3_rtf", "SDL3_ttf"]
     workDir = os.getcwd()
 
-    # if "win32" in sys.platform and "--aarch64" not in argv:
-    #     subprocess.run(["wsl", "-u", "root", "sudo", "python3", "main.py", "--aarch64"], shell = True)
+    # if "win32" in sys.platform and "--arm64" not in argv:
+    #     subprocess.run(["wsl", "-u", "root", "sudo", "python3", "main.py", "--arm64"], shell = True)
     #     subprocess.run(["pause"], shell = True)
     #     return
     # 
@@ -23,13 +23,13 @@ def main(argv):
     # binaries = ["SDL3_ttf", "SDL3_rtf"]
 
     if "linux" in sys.platform:
-        arch = "arm64" if "--aarch64" in argv else "amd64"
+        arch = "arm64" if "--arm64" in argv else "amd64"
         subprocess.run(["sudo", "apt", "install", "-y", f"libfreetype6:{arch}", f"libfreetype6-dev:{arch}", f"linux-libc-dev:{arch}"])
 
     for index, repo in enumerate(repos):
         file = f"{binaries[index]}.dll" if "win32" in sys.platform else f"lib{binaries[index]}.so"
         if not os.path.exists(os.path.join(workDir, "bin")): os.mkdir(os.path.join(workDir, "bin"))
-        folder = "windows-x86_64" if "win32" in sys.platform else ("linux-aarch64" if "--aarch64" in argv else "linux-x86_64")
+        folder = "windows-amd64" if "win32" in sys.platform else ("linux-arm64" if "--arm64" in argv else "linux-amd64")
         if not os.path.exists(os.path.join(workDir, "bin", folder)): os.mkdir(os.path.join(workDir, "bin", folder))
         if os.path.exists(os.path.join(workDir, "bin", folder, file)): continue
         os.chdir(clone(repo))
@@ -39,7 +39,7 @@ def main(argv):
 
         parallel = True
         flags = ["-DCMAKE_TOOLCHAIN_FILE=build-scripts/cmake-toolchain-mingw64-x86_64.cmake"] if repo in ["SDL"] and "win32" in sys.platform else []
-        if "linux" in sys.platform and "--aarch64" in argv: flags += ["-DCMAKE_C_COMPILER=aarch64-linux-gnu-gcc"]
+        if "linux" in sys.platform and "--arm64" in argv: flags += ["-DCMAKE_C_COMPILER=arm64-linux-gnu-gcc"]
         subprocess.run(["cmake", "-S", ".", "-B", "build"] + flags + ["-DCMAKE_BUILD_TYPE=Release"], shell = "win32" in sys.platform)
         subprocess.run(["cmake", "--build", "build", "--config", "Release"] + (["--parallel"] if parallel else []), shell = "win32" in sys.platform)
         subprocess.run(["cmake", "--install", "build"], shell = "win32" in sys.platform)
@@ -52,8 +52,8 @@ def main(argv):
         subprocess.run(["wsl", "-u", "root", "sudo", "python3", "main.py"], shell = True)
         subprocess.run(["pause"], shell = True)
 
-    if "linux" in sys.platform and "--aarch64" not in argv:
-        subprocess.run(["python3", "main.py", "--aarch64"], shell = False)
+    if "linux" in sys.platform and "--arm64" not in argv:
+        subprocess.run(["python3", "main.py", "--arm64"], shell = False)
         
     return 0
 
