@@ -8,9 +8,9 @@ jobs:
     runs-on: ${{ matrix.os }}
 
     strategy:
+      fail-fast: false
       matrix:
         os: [ubuntu-latest, windows-latest]
-        arch: [x64, arm64]
 
     steps:
     - name: Checkout SDL.
@@ -29,17 +29,14 @@ jobs:
       run: |
         choco install cmake --installargs 'ADD_CMAKE_TO_PATH=System' --yes
 
-    - name: Configure build.
-      run: |
-        cmake -B build -S . -DCMAKE_BUILD_TYPE=Release -DCMAKE_SYSTEM_PROCESSOR=${{ matrix.arch }}
-
     - name: Build.
       run: |
+        cmake -B build -S . -DCMAKE_BUILD_TYPE=Release
         cmake --build build --config Release
 
     - name: Upload build artifacts.
       uses: actions/upload-artifact@v4
       with:
-        name: SDL-${{ matrix.os }}-${{ matrix.arch }}
+        name: SDL-${{ matrix.os }}-build
         path: |
           build
