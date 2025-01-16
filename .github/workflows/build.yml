@@ -1,0 +1,47 @@
+name: Build SDL2 and Modules
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        arch: [x64, arm64]
+        module: [SDL, SDL_ttf, SDL_rtf, SDL_net, SDL_image, SDL_mixer]
+
+    steps:
+    - name: Checkout source code
+      uses: actions/checkout@v4
+      with:
+        repository: libsdl-org/${{ matrix.module }}
+
+    - name: Set up environment for Linux.
+      if: matrix.os == 'ubuntu-latest'
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y build-essential cmake libx11-dev libfreetype6-dev libpng-dev libjpeg-dev zlib1g-dev
+
+    - name: Set up environment for Windows.
+      if: matrix.os == 'windows-latest'
+      run: |
+        choco install cmake --installargs 'ADD_CMAKE_TO_PATH=System' --yes
+        choco install freetype --yes
+
+    - name: Configure build.
+      run: |
+        cmake -B build -S . -DCMAKE_BUILD_TYPE=Release -DCMAKE_SYSTEM_PROCESSOR=${{ matrix.arch }}
+
+    - name: Build.
+      run: |
+        cmake --build build --config Release
+
+    - name: Upload build artifacts.
+      uses: actions/upload-artifact@v4
+      with:
+        name: ${{ matrix.module }}-${{ matrix.os }}-${{ matrix.arch }}
+        path: |
+          build
