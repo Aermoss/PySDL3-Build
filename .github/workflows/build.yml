@@ -1,4 +1,4 @@
-name: Build SDL2 and Modules
+name: Build
 
 on:
   workflow_dispatch:
