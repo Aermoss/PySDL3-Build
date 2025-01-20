@@ -37,8 +37,8 @@ jobs:
       - name: Set up environment for Darwin.
         if: matrix.os == 'macos-latest'
         run: |
-          brew install cmake pkg-config ninja libsndfile pulseaudio x11 xext \
-            xrandr xi xkbcommon mesa freetype jack audiofile xcb
+          brew install cmake pkg-config ninja libsndfile pulseaudio libx11 libxext \
+            libxrandr libxi libxkbcommon mesa freetype jack audiofile libxcb
 
       - name: Set up environment for Windows.
         if: matrix.os == 'windows-latest'
