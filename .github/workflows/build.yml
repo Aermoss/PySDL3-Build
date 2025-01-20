@@ -37,9 +37,9 @@ jobs:
       - name: Set up environment for Darwin.
         if: matrix.os == 'macos-latest'
         run: |
-          brew install cmake pkg-config ninja libsndfile alsa libx11 libxext libxrandr libxi \
-            libxss libxkbcommon libdrm libgbm mesa libdbus libibus libudev libwayland libfreetype \
-            libpipewire libjack libpulse libaudiofile libxcb freetype
+          brew install cmake pkg-config ninja libsndfile pulseaudio libx11 libxext libxrandr \
+            libxi libxss libxkbcommon libdrm libgbm mesa libdbus libibus libudev libwayland \
+            libfreetype libpipewire libjack libpulse libaudiofile libxcb freetype
 
       - name: Set up environment for Windows.
         if: matrix.os == 'windows-latest'
