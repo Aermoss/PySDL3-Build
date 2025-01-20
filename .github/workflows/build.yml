@@ -37,14 +37,16 @@ jobs:
       - name: Set up environment for Darwin.
         if: matrix.os == 'macos-latest'
         run: |
-          brew install cmake ninja
+          brew install cmake pkg-config ninja libsndfile alsa libx11 libxext libxrandr libxi \
+            libxss libxkbcommon libdrm libgbm mesa libdbus libibus libudev libwayland libfreetype \
+            libpipewire libjack libpulse libaudiofile libxcb freetype
 
       - name: Set up environment for Windows.
         if: matrix.os == 'windows-latest'
         uses: msys2/setup-msys2@v2
         with:
           msystem: mingw64
-          install: base-devel mingw-w64-x86_64-toolchain mingw-w64-x86_64-cmake
+          install: base-devel mingw-w64-x86_64-toolchain mingw-w64-x86_64-cmake mingw-w64-x86_64-freetype
           update: true
 
       - name: Checkout SDL.
@@ -52,7 +54,7 @@ jobs:
         with:
           repository: libsdl-org/SDL
 
-      - name: Build for Linux or Darwin.
+      - name: Build SDL for Linux or Darwin.
         if: matrix.os == 'ubuntu-latest' || matrix.os == 'macos-latest'
         shell: bash
         run: |
@@ -60,13 +62,13 @@ jobs:
           cmake --build build --config Release
           cmake --install build
 
-      - name: Build for Windows.
+      - name: Build SDL for Windows.
         if: matrix.os == 'windows-latest'
         shell: msys2 {0}
         run: |
           cmake -B build -S . -DCMAKE_BUILD_TYPE=Release
           cmake --build build --config Release
-          cmake --install build
+          sudo cmake --install build
 
       - name: Upload SDL build artifacts.
         uses: actions/upload-artifact@v4
@@ -80,15 +82,15 @@ jobs:
         with:
           repository: libsdl-org/SDL_ttf
 
-      - name: Build for Linux or Darwin.
+      - name: Build SDL_ttf for Linux or Darwin.
         if: matrix.os == 'ubuntu-latest' || matrix.os == 'macos-latest'
         shell: bash
         run: |
           cmake -B build -S . -DCMAKE_BUILD_TYPE=Release
           cmake --build build --config Release
-          cmake --install build
+          sudo cmake --install build
 
-      - name: Build for Windows.
+      - name: Build SDL_ttf for Windows.
         if: matrix.os == 'windows-latest'
         shell: msys2 {0}
         run: |
