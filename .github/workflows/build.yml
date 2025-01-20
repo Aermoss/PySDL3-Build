@@ -1,7 +1,6 @@
 name: Build
 
-on:
-  workflow_dispatch:
+on: [push]
 
 jobs:
   build:
@@ -11,6 +10,13 @@ jobs:
       fail-fast: false
       matrix:
         os: [ubuntu-latest, windows-latest]
+
+        include:
+          - os: ubuntu-latest
+            platform: linux
+  
+          - os: windows-latest
+            platform: windows
 
     steps:
     - name: Checkout SDL.
@@ -22,14 +28,31 @@ jobs:
       if: matrix.os == 'ubuntu-latest'
       run: |
         sudo apt-get update
-        sudo apt-get install -y build-essential cmake libx11-dev libfreetype6-dev libpng-dev libjpeg-dev zlib1g-dev
+        sudo apt-get install build-essential git make \
+          pkg-config cmake ninja-build gnome-desktop-testing libasound2-dev libpulse-dev \
+          libaudio-dev libjack-dev libsndio-dev libx11-dev libxext-dev \
+          libxrandr-dev libxcursor-dev libxfixes-dev libxi-dev libxss-dev \
+          libxkbcommon-dev libdrm-dev libgbm-dev libgl1-mesa-dev libgles2-mesa-dev \
+          libegl1-mesa-dev libdbus-1-dev libibus-1.0-dev libudev-dev fcitx-libs-dev \
+          libpipewire-0.3-dev libwayland-dev libdecor-0-dev liburing-dev
 
     - name: Set up environment for Windows.
       if: matrix.os == 'windows-latest'
-      run: |
-        choco install cmake --installargs 'ADD_CMAKE_TO_PATH=System' --yes
+      uses: msys2/setup-msys2@v2
+      with:
+        msystem: mingw64
+        install: base-devel mingw-w64-x86_64-toolchain mingw-w64-x86_64-cmake
+        update: true
 
-    - name: Build.
+    - name: Build for Linux.
+      if: matrix.os == 'ubuntu-latest'
+      run: |
+        cmake -B build -S . -DCMAKE_BUILD_TYPE=Release
+        cmake --build build --config Release
+
+    - name: Build for Windows.
+      if: matrix.os == 'windows-latest'
+      shell: msys2
       run: |
         cmake -B build -S . -DCMAKE_BUILD_TYPE=Release
         cmake --build build --config Release
@@ -37,6 +60,6 @@ jobs:
     - name: Upload build artifacts.
       uses: actions/upload-artifact@v4
       with:
-        name: SDL-${{ matrix.os }}-build
+        name: SDL-${{ matrix.platform }}
         path: |
           build
