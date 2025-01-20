@@ -38,7 +38,7 @@ jobs:
         if: matrix.os == 'macos-latest'
         run: |
           brew install cmake pkg-config ninja libsndfile pulseaudio libx11 libxext \
-            libxrandr libxi libxkbcommon mesa freetype jack audiofile libxcb
+            libxrandr libxi libxkbcommon mesa freetype audiofile libxcb
 
       - name: Set up environment for Windows.
         if: matrix.os == 'windows-latest'
