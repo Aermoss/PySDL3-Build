@@ -36,6 +36,9 @@ jobs:
         run: |
           if [ "${{matrix.arch}}" == "arm64" ]; then
             sudo dpkg --add-architecture arm64
+            cat /etc/apt/apt-mirrors.txt
+            echo AAAAAAAAAAAAAHHHHHHHHHHHHHHHHHHHHHHH
+            sudo mv /etc/apt/apt-mirrors.txt /etc/apt/apt-mirrors.txt.bak
             sudo mv /etc/apt/sources.list /etc/apt/sources.list.bak
             echo "deb [arch=amd64] http://archive.ubuntu.com/ubuntu/ noble main restricted universe multiverse" | sudo tee /etc/apt/sources.list
             echo "deb [arch=arm64] http://ports.ubuntu.com/ubuntu-ports/ noble main restricted universe multiverse" | sudo tee -a /etc/apt/sources.list
