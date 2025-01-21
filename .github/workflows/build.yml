@@ -36,7 +36,7 @@ jobs:
         run: |
           if [ "${{matrix.arch}}" == "arm64" ]; then
             sudo dpkg --add-architecture arm64
-            echo "http://ports.ubuntu.com/ubuntu-ports/ priority:4" | /etc/apt/apt-mirrors.txt
+            sudo echo "http://ports.ubuntu.com/ubuntu-ports/ priority:4" | /etc/apt/apt-mirrors.txt
             cat /etc/apt/apt-mirrors.txt
             echo AAAAAAAAAAAAAHHHHHHHHHHHHHHHHHHHHHHH
             sudo mv /etc/apt/sources.list /etc/apt/sources.list.bak
