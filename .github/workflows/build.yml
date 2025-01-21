@@ -34,6 +34,7 @@ jobs:
       - name: Set up environment for Linux.
         if: matrix.os == 'ubuntu-latest'
         run: |
+          sudo dpkg --add-architecture arm64
           sudo apt-get update
           sudo apt-get install build-essential git make \
             pkg-config cmake ninja-build gnome-desktop-testing libasound2-dev libpulse-dev \
@@ -46,11 +47,17 @@ jobs:
       - name: Set up environment for Darwin.
         if: matrix.os == 'macos-latest'
         run: |
-          arch -${{matrix.arch}} brew install cmake pkg-config ninja libsndfile libx11 libxext \
+          if [ "${{matrix.arch}}" == "arm64" ]; then
+            BREW="/opt/homebrew/bin/brew"
+          else
+            BREW="/usr/local/bin/brew"
+          fi
+          
+          arch -${{matrix.arch}} $BREW install cmake pkg-config ninja libsndfile libx11 libxext \
             portaudio libxrandr libxi libxkbcommon mesa freetype libxcb
 
       - name: Set up environment for Windows.
-        if: matrix.os == 'windows-latest' && matrix.arch == 'x64'
+        if: matrix.os == 'windows-latest' && matrix.arch == 'x86_64'
         uses: msys2/setup-msys2@v2
         with:
           msystem: mingw64
@@ -79,7 +86,7 @@ jobs:
           sudo cmake --install build
 
       - name: Build SDL for Windows.
-        if: matrix.os == 'windows-latest' && matrix.arch == 'x64'
+        if: matrix.os == 'windows-latest' && matrix.arch == 'x86_64'
         shell: msys2 {0}
         run: |
           cmake -B build -S . -DCMAKE_BUILD_TYPE=Release
@@ -116,7 +123,7 @@ jobs:
           sudo cmake --install build
 
       - name: Build SDL_image for Windows.
-        if: matrix.os == 'windows-latest' && matrix.arch == 'x64'
+        if: matrix.os == 'windows-latest' && matrix.arch == 'x86_64'
         shell: msys2 {0}
         run: |
           cmake -B build -S . -DCMAKE_BUILD_TYPE=Release
@@ -153,7 +160,7 @@ jobs:
           sudo cmake --install build
 
       - name: Build SDL_mixer for Windows.
-        if: matrix.os == 'windows-latest' && matrix.arch == 'x64'
+        if: matrix.os == 'windows-latest' && matrix.arch == 'x86_64'
         shell: msys2 {0}
         run: |
           cmake -B build -S . -DCMAKE_BUILD_TYPE=Release
@@ -190,7 +197,7 @@ jobs:
           sudo cmake --install build
 
       - name: Build SDL_ttf for Windows.
-        if: matrix.os == 'windows-latest' && matrix.arch == 'x64'
+        if: matrix.os == 'windows-latest' && matrix.arch == 'x86_64'
         shell: msys2 {0}
         run: |
           cmake -B build -S . -DCMAKE_BUILD_TYPE=Release
@@ -227,7 +234,7 @@ jobs:
           sudo cmake --install build
 
       - name: Build SDL_rtf for Windows.
-        if: matrix.os == 'windows-latest' && matrix.arch == 'x64'
+        if: matrix.os == 'windows-latest' && matrix.arch == 'x86_64'
         shell: msys2 {0}
         run: |
           cmake -B build -S . -DCMAKE_BUILD_TYPE=Release
@@ -264,7 +271,7 @@ jobs:
           sudo cmake --install build
 
       - name: Build SDL_net for Windows.
-        if: matrix.os == 'windows-latest' && matrix.arch == 'x64'
+        if: matrix.os == 'windows-latest' && matrix.arch == 'x86_64'
         shell: msys2 {0}
         run: |
           cmake -B build -S . -DCMAKE_BUILD_TYPE=Release
