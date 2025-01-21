@@ -36,6 +36,7 @@ jobs:
         run: |
           if [ "${{matrix.arch}}" == "arm64" ]; then
             sudo dpkg --add-architecture arm64
+            sudo dpkg --remove-architecture amd64
             sudo add-apt-repository "deb http://ports.ubuntu.com/ noble main restricted universe multiverse"
             sudo add-apt-repository "deb http://ports.ubuntu.com/ noble-updates main restricted universe multiverse"
             sudo add-apt-repository "deb http://ports.ubuntu.com/ noble-security main restricted universe multiverse"
