@@ -86,7 +86,7 @@ jobs:
         shell: bash
         run: |
           if [ "$RUNNER_OS" == "Linux" ] && [ "${{matrix.arch}}" == "arm64" ]; then
-            FLAGS="-DCMAKE_C_COMPILER='aarch64-linux-gnu-g++' -DCMAKE_CXX_COMPILER='aarch64-linux-gnu-g++'"
+            FLAGS="-DCMAKE_C_COMPILER='aarch64-linux-gnu-gcc' -DCMAKE_CXX_COMPILER='aarch64-linux-gnu-g++'"
           elif [ "$RUNNER_OS" == "Darwin" ]; then
             FLAGS="-DCMAKE_OSX_ARCHITECTURES=${{matrix.arch}}"
           else
@@ -123,7 +123,7 @@ jobs:
         shell: bash
         run: |
           if [ "$RUNNER_OS" == "Linux" ] && [ "${{matrix.arch}}" == "arm64" ]; then
-            FLAGS="-DCMAKE_C_COMPILER='aarch64-linux-gnu-g++' -DCMAKE_CXX_COMPILER='aarch64-linux-gnu-g++'"
+            FLAGS="-DCMAKE_C_COMPILER='aarch64-linux-gnu-gcc' -DCMAKE_CXX_COMPILER='aarch64-linux-gnu-g++'"
           elif [ "$RUNNER_OS" == "Darwin" ]; then
             FLAGS="-DCMAKE_OSX_ARCHITECTURES='${{matrix.arch}}'"
           else
@@ -160,7 +160,7 @@ jobs:
         shell: bash
         run: |
           if [ "$RUNNER_OS" == "Linux" ] && [ "${{matrix.arch}}" == "arm64" ]; then
-            FLAGS="-DCMAKE_C_COMPILER='aarch64-linux-gnu-g++' -DCMAKE_CXX_COMPILER='aarch64-linux-gnu-g++'"
+            FLAGS="-DCMAKE_C_COMPILER='aarch64-linux-gnu-gcc' -DCMAKE_CXX_COMPILER='aarch64-linux-gnu-g++'"
           elif [ "$RUNNER_OS" == "Darwin" ]; then
             FLAGS="-DCMAKE_OSX_ARCHITECTURES='${{matrix.arch}}'"
           else
@@ -197,7 +197,7 @@ jobs:
         shell: bash
         run: |
           if [ "$RUNNER_OS" == "Linux" ] && [ "${{matrix.arch}}" == "arm64" ]; then
-            FLAGS="-DCMAKE_C_COMPILER='aarch64-linux-gnu-g++' -DCMAKE_CXX_COMPILER='aarch64-linux-gnu-g++'"
+            FLAGS="-DCMAKE_C_COMPILER='aarch64-linux-gnu-gcc' -DCMAKE_CXX_COMPILER='aarch64-linux-gnu-g++'"
           elif [ "$RUNNER_OS" == "Darwin" ]; then
             FLAGS="-DCMAKE_OSX_ARCHITECTURES='${{matrix.arch}}'"
           else
@@ -234,7 +234,7 @@ jobs:
         shell: bash
         run: |
           if [ "$RUNNER_OS" == "Linux" ] && [ "${{matrix.arch}}" == "arm64" ]; then
-            FLAGS="-DCMAKE_C_COMPILER='aarch64-linux-gnu-g++' -DCMAKE_CXX_COMPILER='aarch64-linux-gnu-g++'"
+            FLAGS="-DCMAKE_C_COMPILER='aarch64-linux-gnu-gcc' -DCMAKE_CXX_COMPILER='aarch64-linux-gnu-g++'"
           elif [ "$RUNNER_OS" == "Darwin" ]; then
             FLAGS="-DCMAKE_OSX_ARCHITECTURES='${{matrix.arch}}'"
           else
@@ -271,7 +271,7 @@ jobs:
         shell: bash
         run: |
           if [ "$RUNNER_OS" == "Linux" ] && [ "${{matrix.arch}}" == "arm64" ]; then
-            FLAGS="-DCMAKE_C_COMPILER='aarch64-linux-gnu-g++' -DCMAKE_CXX_COMPILER='aarch64-linux-gnu-g++'"
+            FLAGS="-DCMAKE_C_COMPILER='aarch64-linux-gnu-gcc' -DCMAKE_CXX_COMPILER='aarch64-linux-gnu-g++'"
           elif [ "$RUNNER_OS" == "Darwin" ]; then
             FLAGS="-DCMAKE_OSX_ARCHITECTURES='${{matrix.arch}}'"
           else
