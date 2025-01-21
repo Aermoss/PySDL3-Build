@@ -48,13 +48,12 @@ jobs:
           fi
 
           sudo apt-get update
-          sudo apt-get install build-essential git make \
-            pkg-config cmake ninja-build gnome-desktop-testing libasound2-dev libpulse-dev \
-            libaudio-dev libjack-dev libsndio-dev libx11-dev libxext-dev libfreetype6-dev:${{matrix.apt-arch}} \
-            libxrandr-dev libxcursor-dev libxfixes-dev libxi-dev libxss-dev libfreetype6:${{matrix.apt-arch}} \
-            libxkbcommon-dev libdrm-dev libgbm-dev libgl1-mesa-dev libgles2-mesa-dev linux-libc-dev:${{matrix.apt-arch}} \
-            libegl1-mesa-dev libdbus-1-dev libibus-1.0-dev libudev-dev fcitx-libs-dev \
-            libpipewire-0.3-dev libwayland-dev libdecor-0-dev liburing-dev
+          sudo apt-get install build-essential git make pkg-config cmake ninja-build gnome-desktop-testing libasound2-dev:${{matrix.apt-arch}} libpulse-dev:${{matrix.apt-arch}} \
+            libaudio-dev:${{matrix.apt-arch}} libjack-dev:${{matrix.apt-arch}} libsndio-dev:${{matrix.apt-arch}} libx11-dev:${{matrix.apt-arch}} libxext-dev:${{matrix.apt-arch}} libfreetype6-dev:${{matrix.apt-arch}} \
+            libxrandr-dev:${{matrix.apt-arch}} libxcursor-dev:${{matrix.apt-arch}} libxfixes-dev:${{matrix.apt-arch}} libxi-dev:${{matrix.apt-arch}} libxss-dev:${{matrix.apt-arch}} libfreetype6:${{matrix.apt-arch}} \
+            libxkbcommon-dev:${{matrix.apt-arch}} libdrm-dev:${{matrix.apt-arch}} libgbm-dev:${{matrix.apt-arch}} libgl1-mesa-dev:${{matrix.apt-arch}} libgles2-mesa-dev:${{matrix.apt-arch}} linux-libc-dev:${{matrix.apt-arch}} \
+            libegl1-mesa-dev:${{matrix.apt-arch}} libdbus-1-dev:${{matrix.apt-arch}} libibus-1.0-dev:${{matrix.apt-arch}} libudev-dev:${{matrix.apt-arch}} fcitx-libs-dev:${{matrix.apt-arch}} \
+            libpipewire-0.3-dev:${{matrix.apt-arch}} libwayland-dev:${{matrix.apt-arch}} libdecor-0-dev:${{matrix.apt-arch}} liburing-dev:${{matrix.apt-arch}}
 
       - name: Set up environment for Darwin.
         if: matrix.os == 'macos-latest'
@@ -87,14 +86,14 @@ jobs:
         shell: bash
         run: |
           if [ "$RUNNER_OS" == "Linux" && "${{matrix.arch}}" == "arm64" ]; then
-            FLAGS="-DCMAKE_C_COMPILER=aarch64-linux-gnu-gcc"
+            FLAGS="-DCMAKE_CXX_COMPILER=aarch64-linux-gnu-g++"
           elif [ "$RUNNER_OS" == "Darwin" ]; then
             FLAGS="-DCMAKE_OSX_ARCHITECTURES=${{matrix.arch}}"
           else
             FLAGS=""
           fi
 
-          cmake -B build -S . -DCMAKE_BUILD_TYPE=Release $FLAGS
+          cmake -B build -S . -DCMAKE_BUILD_TYPE=Release -DCMAKE_SYSTEM_PROCESSOR=${{matrix.arch}} $FLAGS
           cmake --build build --config Release
           sudo cmake --install build
 
@@ -124,14 +123,14 @@ jobs:
         shell: bash
         run: |
           if [ "$RUNNER_OS" == "Linux" && "${{matrix.arch}}" == "arm64" ]; then
-            FLAGS="-DCMAKE_C_COMPILER=aarch64-linux-gnu-gcc"
+            FLAGS="-DCMAKE_CXX_COMPILER=aarch64-linux-gnu-gcc"
           elif [ "$RUNNER_OS" == "Darwin" ]; then
             FLAGS="-DCMAKE_OSX_ARCHITECTURES=${{matrix.arch}}"
           else
             FLAGS=""
           fi
 
-          cmake -B build -S . -DCMAKE_BUILD_TYPE=Release $FLAGS
+          cmake -B build -S . -DCMAKE_BUILD_TYPE=Release -DCMAKE_SYSTEM_PROCESSOR=${{matrix.arch}} $FLAGS
           cmake --build build --config Release
           sudo cmake --install build
 
@@ -161,14 +160,14 @@ jobs:
         shell: bash
         run: |
           if [ "$RUNNER_OS" == "Linux" && "${{matrix.arch}}" == "arm64" ]; then
-            FLAGS="-DCMAKE_C_COMPILER=aarch64-linux-gnu-gcc"
+            FLAGS="-DCMAKE_CXX_COMPILER=aarch64-linux-gnu-gcc"
           elif [ "$RUNNER_OS" == "Darwin" ]; then
             FLAGS="-DCMAKE_OSX_ARCHITECTURES=${{matrix.arch}}"
           else
             FLAGS=""
           fi
 
-          cmake -B build -S . -DCMAKE_BUILD_TYPE=Release $FLAGS
+          cmake -B build -S . -DCMAKE_BUILD_TYPE=Release -DCMAKE_SYSTEM_PROCESSOR=${{matrix.arch}} $FLAGS
           cmake --build build --config Release
           sudo cmake --install build
 
@@ -198,14 +197,14 @@ jobs:
         shell: bash
         run: |
           if [ "$RUNNER_OS" == "Linux" && "${{matrix.arch}}" == "arm64" ]; then
-            FLAGS="-DCMAKE_C_COMPILER=aarch64-linux-gnu-gcc"
+            FLAGS="-DCMAKE_CXX_COMPILER=aarch64-linux-gnu-gcc"
           elif [ "$RUNNER_OS" == "Darwin" ]; then
             FLAGS="-DCMAKE_OSX_ARCHITECTURES=${{matrix.arch}}"
           else
             FLAGS=""
           fi
 
-          cmake -B build -S . -DCMAKE_BUILD_TYPE=Release $FLAGS
+          cmake -B build -S . -DCMAKE_BUILD_TYPE=Release -DCMAKE_SYSTEM_PROCESSOR=${{matrix.arch}} $FLAGS
           cmake --build build --config Release
           sudo cmake --install build
 
@@ -235,14 +234,14 @@ jobs:
         shell: bash
         run: |
           if [ "$RUNNER_OS" == "Linux" && "${{matrix.arch}}" == "arm64" ]; then
-            FLAGS="-DCMAKE_C_COMPILER=aarch64-linux-gnu-gcc"
+            FLAGS="-DCMAKE_CXX_COMPILER=aarch64-linux-gnu-gcc"
           elif [ "$RUNNER_OS" == "Darwin" ]; then
             FLAGS="-DCMAKE_OSX_ARCHITECTURES=${{matrix.arch}}"
           else
             FLAGS=""
           fi
 
-          cmake -B build -S . -DCMAKE_BUILD_TYPE=Release $FLAGS
+          cmake -B build -S . -DCMAKE_BUILD_TYPE=Release -DCMAKE_SYSTEM_PROCESSOR=${{matrix.arch}} $FLAGS
           cmake --build build --config Release
           sudo cmake --install build
 
@@ -272,14 +271,14 @@ jobs:
         shell: bash
         run: |
           if [ "$RUNNER_OS" == "Linux" && "${{matrix.arch}}" == "arm64" ]; then
-            FLAGS="-DCMAKE_C_COMPILER=aarch64-linux-gnu-gcc"
+            FLAGS="-DCMAKE_CXX_COMPILER=aarch64-linux-gnu-gcc"
           elif [ "$RUNNER_OS" == "Darwin" ]; then
             FLAGS="-DCMAKE_OSX_ARCHITECTURES=${{matrix.arch}}"
           else
             FLAGS=""
           fi
 
-          cmake -B build -S . -DCMAKE_BUILD_TYPE=Release $FLAGS
+          cmake -B build -S . -DCMAKE_BUILD_TYPE=Release -DCMAKE_SYSTEM_PROCESSOR=${{matrix.arch}} $FLAGS
           cmake --build build --config Release
           sudo cmake --install build
 
