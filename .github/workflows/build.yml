@@ -36,10 +36,10 @@ jobs:
         run: |
           if [ "${{matrix.arch}}" == "arm64" ]; then
             sudo dpkg --add-architecture arm64
-            sudo add-apt-repository "deb http://archive.ubuntu.com/ubuntu/ jammy main restricted universe multiverse"
-            sudo add-apt-repository "deb http://archive.ubuntu.com/ubuntu/ jammy-updates main restricted universe multiverse"
-            sudo add-apt-repository "deb http://archive.ubuntu.com/ubuntu/ jammy-security main restricted universe multiverse"
-            sudo add-apt-repository "deb http://archive.ubuntu.com/ubuntu/ jammy-backports main restricted universe multiverse"
+            sudo add-apt-repository "deb http://archive.ubuntu.com/ubuntu/ noble main restricted universe multiverse"
+            sudo add-apt-repository "deb http://archive.ubuntu.com/ubuntu/ noble-updates main restricted universe multiverse"
+            sudo add-apt-repository "deb http://archive.ubuntu.com/ubuntu/ noble-security main restricted universe multiverse"
+            sudo add-apt-repository "deb http://archive.ubuntu.com/ubuntu/ noble-backports main restricted universe multiverse"
             sudo apt-get install -y gcc-aarch64-linux-gnu g++-aarch64-linux-gnu
           fi
 
