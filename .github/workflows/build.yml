@@ -86,7 +86,7 @@ jobs:
         shell: bash
         run: |
           if [ "$RUNNER_OS" == "Linux" && "${{matrix.arch}}" == "arm64" ]; then
-            FLAGS="-DCMAKE_C_COMPILER='aarch64-linux-gnu-g++'"
+            FLAGS="-DCMAKE_C_COMPILER='aarch64-linux-gnu-g++' -DCMAKE_CXX_COMPILER='aarch64-linux-gnu-g++'"
           elif [ "$RUNNER_OS" == "Darwin" ]; then
             FLAGS="-DCMAKE_OSX_ARCHITECTURES=${{matrix.arch}}"
           else
@@ -123,14 +123,14 @@ jobs:
         shell: bash
         run: |
           if [ "$RUNNER_OS" == "Linux" && "${{matrix.arch}}" == "arm64" ]; then
-            FLAGS="-DCMAKE_CXX_COMPILER=aarch64-linux-gnu-gcc"
+            FLAGS="-DCMAKE_C_COMPILER='aarch64-linux-gnu-g++' -DCMAKE_CXX_COMPILER='aarch64-linux-gnu-g++'"
           elif [ "$RUNNER_OS" == "Darwin" ]; then
-            FLAGS="-DCMAKE_OSX_ARCHITECTURES=${{matrix.arch}}"
+            FLAGS="-DCMAKE_OSX_ARCHITECTURES='${{matrix.arch}}'"
           else
             FLAGS=""
           fi
 
-          cmake -B build -S . -DCMAKE_BUILD_TYPE=Release -DCMAKE_SYSTEM_PROCESSOR=${{matrix.arch}} $FLAGS
+          cmake -B build -S . -DCMAKE_BUILD_TYPE=Release -DCMAKE_SYSTEM_PROCESSOR="${{matrix.arch}}" $FLAGS
           cmake --build build --config Release
           sudo cmake --install build
 
@@ -160,14 +160,14 @@ jobs:
         shell: bash
         run: |
           if [ "$RUNNER_OS" == "Linux" && "${{matrix.arch}}" == "arm64" ]; then
-            FLAGS="-DCMAKE_CXX_COMPILER=aarch64-linux-gnu-gcc"
+            FLAGS="-DCMAKE_C_COMPILER='aarch64-linux-gnu-g++' -DCMAKE_CXX_COMPILER='aarch64-linux-gnu-g++'"
           elif [ "$RUNNER_OS" == "Darwin" ]; then
-            FLAGS="-DCMAKE_OSX_ARCHITECTURES=${{matrix.arch}}"
+            FLAGS="-DCMAKE_OSX_ARCHITECTURES='${{matrix.arch}}'"
           else
             FLAGS=""
           fi
 
-          cmake -B build -S . -DCMAKE_BUILD_TYPE=Release -DCMAKE_SYSTEM_PROCESSOR=${{matrix.arch}} $FLAGS
+          cmake -B build -S . -DCMAKE_BUILD_TYPE=Release -DCMAKE_SYSTEM_PROCESSOR="${{matrix.arch}}" $FLAGS
           cmake --build build --config Release
           sudo cmake --install build
 
@@ -197,14 +197,14 @@ jobs:
         shell: bash
         run: |
           if [ "$RUNNER_OS" == "Linux" && "${{matrix.arch}}" == "arm64" ]; then
-            FLAGS="-DCMAKE_CXX_COMPILER=aarch64-linux-gnu-gcc"
+            FLAGS="-DCMAKE_C_COMPILER='aarch64-linux-gnu-g++' -DCMAKE_CXX_COMPILER='aarch64-linux-gnu-g++'"
           elif [ "$RUNNER_OS" == "Darwin" ]; then
-            FLAGS="-DCMAKE_OSX_ARCHITECTURES=${{matrix.arch}}"
+            FLAGS="-DCMAKE_OSX_ARCHITECTURES='${{matrix.arch}}'"
           else
             FLAGS=""
           fi
 
-          cmake -B build -S . -DCMAKE_BUILD_TYPE=Release -DCMAKE_SYSTEM_PROCESSOR=${{matrix.arch}} $FLAGS
+          cmake -B build -S . -DCMAKE_BUILD_TYPE=Release -DCMAKE_SYSTEM_PROCESSOR="${{matrix.arch}}" $FLAGS
           cmake --build build --config Release
           sudo cmake --install build
 
@@ -234,14 +234,14 @@ jobs:
         shell: bash
         run: |
           if [ "$RUNNER_OS" == "Linux" && "${{matrix.arch}}" == "arm64" ]; then
-            FLAGS="-DCMAKE_CXX_COMPILER=aarch64-linux-gnu-gcc"
+            FLAGS="-DCMAKE_C_COMPILER='aarch64-linux-gnu-g++' -DCMAKE_CXX_COMPILER='aarch64-linux-gnu-g++'"
           elif [ "$RUNNER_OS" == "Darwin" ]; then
-            FLAGS="-DCMAKE_OSX_ARCHITECTURES=${{matrix.arch}}"
+            FLAGS="-DCMAKE_OSX_ARCHITECTURES='${{matrix.arch}}'"
           else
             FLAGS=""
           fi
 
-          cmake -B build -S . -DCMAKE_BUILD_TYPE=Release -DCMAKE_SYSTEM_PROCESSOR=${{matrix.arch}} $FLAGS
+          cmake -B build -S . -DCMAKE_BUILD_TYPE=Release -DCMAKE_SYSTEM_PROCESSOR="${{matrix.arch}}" $FLAGS
           cmake --build build --config Release
           sudo cmake --install build
 
@@ -271,14 +271,14 @@ jobs:
         shell: bash
         run: |
           if [ "$RUNNER_OS" == "Linux" && "${{matrix.arch}}" == "arm64" ]; then
-            FLAGS="-DCMAKE_CXX_COMPILER=aarch64-linux-gnu-gcc"
+            FLAGS="-DCMAKE_C_COMPILER='aarch64-linux-gnu-g++' -DCMAKE_CXX_COMPILER='aarch64-linux-gnu-g++'"
           elif [ "$RUNNER_OS" == "Darwin" ]; then
-            FLAGS="-DCMAKE_OSX_ARCHITECTURES=${{matrix.arch}}"
+            FLAGS="-DCMAKE_OSX_ARCHITECTURES='${{matrix.arch}}'"
           else
             FLAGS=""
           fi
 
-          cmake -B build -S . -DCMAKE_BUILD_TYPE=Release -DCMAKE_SYSTEM_PROCESSOR=${{matrix.arch}} $FLAGS
+          cmake -B build -S . -DCMAKE_BUILD_TYPE=Release -DCMAKE_SYSTEM_PROCESSOR="${{matrix.arch}}" $FLAGS
           cmake --build build --config Release
           sudo cmake --install build
 
