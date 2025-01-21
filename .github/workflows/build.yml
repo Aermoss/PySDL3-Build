@@ -35,9 +35,9 @@ jobs:
         if: matrix.os == 'ubuntu-latest'
         run: |
           if [ "${{matrix.arch}}" == "arm64" ]; then
-            sudo dpkg --add-architecture arm64
-            sudo echo "http://ports.ubuntu.com/ubuntu-ports/ priority:4" | sudo tee /etc/apt/apt-mirrors.txt
+            sudo echo "http://ports.ubuntu.com/ubuntu-ports/" | sudo tee /etc/apt/apt-mirrors.txt
             cat /etc/apt/apt-mirrors.txt
+            sudo dpkg --add-architecture arm64
             echo AAAAAAAAAAAAAHHHHHHHHHHHHHHHHHHHHHHH
             sudo mv /etc/apt/sources.list /etc/apt/sources.list.bak
             echo "deb [arch=amd64] http://archive.ubuntu.com/ubuntu/ noble main restricted universe multiverse" | sudo tee /etc/apt/sources.list
