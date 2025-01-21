@@ -36,14 +36,14 @@ jobs:
         run: |
           if [ "${{matrix.arch}}" == "arm64" ]; then
             sudo dpkg --add-architecture arm64
-            sudo add-apt-repository "deb [arch=arm64] http://archive.ubuntu.com/ubuntu focal main restricted universe multiverse"
-            sudo add-apt-repository "deb [arch=arm64] http://archive.ubuntu.com/ubuntu focal-updates main restricted universe multiverse"
-            sudo add-apt-repository "deb [arch=arm64] http://archive.ubuntu.com/ubuntu focal-backports main restricted universe multiverse"
-            sudo add-apt-repository "deb [arch=arm64] http://security.ubuntu.com/ubuntu focal-security main restricted universe multiverse"
+            sudo add-apt-repository "deb [arch=arm64] http://ports.ubuntu.com/ focal main multiverse universe"
+            sudo add-apt-repository "deb [arch=arm64] http://ports.ubuntu.com/ focal-security main multiverse universe"
+            sudo add-apt-repository "deb [arch=arm64] http://ports.ubuntu.com/ focal-backports main multiverse universe"
+            sudo add-apt-repository "deb [arch=arm64] http://ports.ubuntu.com/ focal-updates main multiverse universe"
             sudo apt-get install -y gcc-aarch64-linux-gnu g++-aarch64-linux-gnu
           fi
 
-          sudo apt-get update --allow-unauthenticated --allow-releaseinfo-change --fix-missing
+          sudo apt-get update
           sudo apt-get install build-essential git make \
             pkg-config cmake ninja-build gnome-desktop-testing libasound2-dev libpulse-dev \
             libaudio-dev libjack-dev libsndio-dev libx11-dev libxext-dev libfreetype6-dev:${{matrix.apt-arch}} \
@@ -105,7 +105,7 @@ jobs:
       - name: Upload SDL build artifacts.
         uses: actions/upload-artifact@v4
         with:
-          name: SDL-${{matrix.platform}}-${{matrix.zip-arch}}
+          name: ${{matrix.zip-arch}}-${{matrix.platform}}-SDL
           path: |
             build
         continue-on-error: true
@@ -142,7 +142,7 @@ jobs:
       - name: Upload SDL_image build artifacts.
         uses: actions/upload-artifact@v4
         with:
-          name: SDL_image-${{matrix.platform}}-${{matrix.zip-arch}}
+          name: ${{matrix.zip-arch}}-${{matrix.platform}}-SDL_image
           path: |
             build
         continue-on-error: true
@@ -179,7 +179,7 @@ jobs:
       - name: Upload SDL_mixer build artifacts.
         uses: actions/upload-artifact@v4
         with:
-          name: SDL_mixer-${{matrix.platform}}-${{matrix.zip-arch}}
+          name: ${{matrix.zip-arch}}-${{matrix.platform}}-SDL_mixer
           path: |
             build
         continue-on-error: true
@@ -216,7 +216,7 @@ jobs:
       - name: Upload SDL_ttf build artifacts.
         uses: actions/upload-artifact@v4
         with:
-          name: SDL_ttf-${{matrix.platform}}-${{matrix.zip-arch}}
+          name: ${{matrix.zip-arch}}-${{matrix.platform}}-SDL_ttf
           path: |
             build
         continue-on-error: true
@@ -253,7 +253,7 @@ jobs:
       - name: Upload SDL_rtf build artifacts.
         uses: actions/upload-artifact@v4
         with:
-          name: SDL_rtf-${{matrix.platform}}-${{matrix.zip-arch}}
+          name: ${{matrix.zip-arch}}-${{matrix.platform}}-SDL_rtf
           path: |
             build
         continue-on-error: true
@@ -290,7 +290,7 @@ jobs:
       - name: Upload SDL_net build artifacts.
         uses: actions/upload-artifact@v4
         with:
-          name: SDL_net-${{matrix.platform}}-${{matrix.zip-arch}}
+          name: ${{matrix.zip-arch}}-${{matrix.platform}}-SDL_net
           path: |
             build
         continue-on-error: true
