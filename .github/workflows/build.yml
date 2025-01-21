@@ -35,16 +35,18 @@ jobs:
         if: matrix.os == 'ubuntu-latest'
         run: |
           if [ "${{matrix.arch}}" == "arm64" ]; then
-            sudo dpkg --add-architecture arm64
             sudo dpkg --remove-architecture amd64
-            sudo add-apt-repository "deb http://ports.ubuntu.com/ noble main restricted universe multiverse"
-            sudo add-apt-repository "deb http://ports.ubuntu.com/ noble-updates main restricted universe multiverse"
-            sudo add-apt-repository "deb http://ports.ubuntu.com/ noble-security main restricted universe multiverse"
-            sudo add-apt-repository "deb http://ports.ubuntu.com/ noble-backports main restricted universe multiverse"
+            sudo dpkg --add-architecture arm64
+            sudo add-apt-repository "deb http://ports.ubuntu.com/ubuntu-ports/ noble main restricted universe multiverse"
+            sudo add-apt-repository "deb http://ports.ubuntu.com/ubuntu-ports/ noble-updates main restricted universe multiverse"
+            sudo add-apt-repository "deb http://ports.ubuntu.com/ubuntu-ports/ noble-security main restricted universe multiverse"
+            sudo add-apt-repository "deb http://ports.ubuntu.com/ubuntu-ports/ noble-backports main restricted universe multiverse"
             sudo apt-get install -y gcc-aarch64-linux-gnu g++-aarch64-linux-gnu
           fi
 
-          sudo apt-get update --fix-missing
+          lsb_release -a
+
+          sudo apt-get update
           sudo apt-get install build-essential git make \
             pkg-config cmake ninja-build gnome-desktop-testing libasound2-dev libpulse-dev \
             libaudio-dev libjack-dev libsndio-dev libx11-dev libxext-dev libfreetype6-dev:${{matrix.apt-arch}} \
