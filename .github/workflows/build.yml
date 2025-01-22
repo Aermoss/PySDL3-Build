@@ -83,7 +83,7 @@ jobs:
         uses: msys2/setup-msys2@v2
         with:
           msystem: mingw64
-          install: base-devel mingw-w64-x86_64-toolchain mingw-w64-x86_64-cmake mingw-w64-x86_64-freetype
+          install: base-devel mingw-w64-x86_64-toolchain mingw-w64-x86_64-cmake mingw-w64-x86_64-ninja mingw-w64-x86_64-freetype
           update: true
 
       - name: Set up MSYS2 CLANGARM64 for Windows.
@@ -91,7 +91,7 @@ jobs:
         uses: msys2/setup-msys2@v2
         with:
           msystem: clangarm64
-          install: base-devel mingw-w64-cross-clang mingw-w64-clang-aarch64-cmake mingw-w64-clang-aarch64-freetype
+          install: base-devel mingw-w64-cross-clang mingw-w64-clang-aarch64-cmake mingw-w64-clang-aarch64-ninja mingw-w64-clang-aarch64-freetype
           update: true
 
       - name: Set up environment for Windows.
@@ -103,10 +103,10 @@ jobs:
           if [ "${{matrix.arch}}" == "arm64" ]; then
             echo "C:/msys64/clangarm64/bin" >> $GITHUB_PATH
             echo "C:/msys64/opt/aarch64-w64-mingw32/bin" >> $GITHUB_PATH
-            echo "FLAGS=-G 'MSYS Makefiles' -DCMAKE_C_COMPILER=aarch64-w64-mingw32-clang" >> $GITHUB_ENV
+            echo "FLAGS=-DCMAKE_C_COMPILER=aarch64-w64-mingw32-clang" >> $GITHUB_ENV
           else
             echo "C:/msys64/mingw64/bin" >> $GITHUB_PATH
-            echo "FLAGS=-G 'MSYS Makefiles'" >> $GITHUB_ENV
+            echo "FLAGS=" >> $GITHUB_ENV
           fi
 
       - name: Checkout SDL.
@@ -117,7 +117,7 @@ jobs:
       - name: Build SDL.
         shell: bash
         run: |
-          cmake -B build -S . -DCMAKE_BUILD_TYPE=Release \
+          cmake -G Ninja -S . -B build -DCMAKE_BUILD_TYPE=Release \
             -DCMAKE_SYSTEM_NAME=${{matrix.platform}} -DCMAKE_SYSTEM_PROCESSOR=${{matrix.arch}} $FLAGS
           cmake --build build --config Release
           $SUDO cmake --install build
@@ -138,7 +138,7 @@ jobs:
       - name: Build SDL_image.
         shell: bash
         run: |
-          cmake -B build -S . -DCMAKE_BUILD_TYPE=Release \
+          cmake -G Ninja -S . -B build -DCMAKE_BUILD_TYPE=Release \
             -DCMAKE_SYSTEM_NAME=${{matrix.platform}} -DCMAKE_SYSTEM_PROCESSOR=${{matrix.arch}} $FLAGS
           cmake --build build --config Release
           $SUDO cmake --install build
@@ -159,7 +159,7 @@ jobs:
       - name: Build SDL_mixer.
         shell: bash
         run: |
-          cmake -B build -S . -DCMAKE_BUILD_TYPE=Release \
+          cmake -G Ninja -S . -B build -DCMAKE_BUILD_TYPE=Release \
             -DCMAKE_SYSTEM_NAME=${{matrix.platform}} -DCMAKE_SYSTEM_PROCESSOR=${{matrix.arch}} $FLAGS
           cmake --build build --config Release
           $SUDO cmake --install build
@@ -180,7 +180,7 @@ jobs:
       - name: Build SDL_ttf.
         shell: bash
         run: |
-          cmake -B build -S . -DCMAKE_BUILD_TYPE=Release \
+          cmake -G Ninja -S . -B build -DCMAKE_BUILD_TYPE=Release \
             -DCMAKE_SYSTEM_NAME=${{matrix.platform}} -DCMAKE_SYSTEM_PROCESSOR=${{matrix.arch}} $FLAGS
           cmake --build build --config Release
           $SUDO cmake --install build
@@ -201,7 +201,7 @@ jobs:
       - name: Build SDL_rtf.
         shell: bash
         run: |
-          cmake -B build -S . -DCMAKE_BUILD_TYPE=Release \
+          cmake -G Ninja -S . -B build -DCMAKE_BUILD_TYPE=Release \
             -DCMAKE_SYSTEM_NAME=${{matrix.platform}} -DCMAKE_SYSTEM_PROCESSOR=${{matrix.arch}} $FLAGS
           cmake --build build --config Release
           $SUDO cmake --install build
@@ -222,7 +222,7 @@ jobs:
       - name: Build SDL_net.
         shell: bash
         run: |
-          cmake -B build -S . -DCMAKE_BUILD_TYPE=Release \
+          cmake -G Ninja -S . -B build -DCMAKE_BUILD_TYPE=Release \
             -DCMAKE_SYSTEM_NAME=${{matrix.platform}} -DCMAKE_SYSTEM_PROCESSOR=${{matrix.arch}} $FLAGS
           cmake --build build --config Release
           $SUDO cmake --install build
