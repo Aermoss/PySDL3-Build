@@ -88,8 +88,8 @@ jobs:
           echo "C:\Program Files\NASM" >> $GITHUB_PATH
           choco install nasm
 
-          ls "C:\Program Files\"
-          ls "C:\Program Files (x86)\"
+          ls "C:/Program Files/"
+          ls "C:/Program Files \(x86\)/"
 
           if [ "${{matrix.arch}}" == "arm64" ]; then
             echo "FLAGS=-A ARM64" >> $GITHUB_ENV
