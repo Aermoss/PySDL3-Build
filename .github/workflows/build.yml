@@ -24,20 +24,21 @@ jobs:
 
           - arch: arm64
             apt-arch: arm64
-            zip-arch: ARM64
+            out-arch: ARM64
 
           - arch: x86_64
             apt-arch: amd64
-            zip-arch: AMD64
+            out-arch: AMD64
 
     steps:
       - name: Set up environment for Linux.
         if: matrix.os == 'ubuntu-latest'
+        shell: bash
         run: |
-          SUDO="sudo"
+          echo "SUDO='sudo'" >> $GITHUB_ENV
 
           if [ "${{matrix.arch}}" == "arm64" ]; then
-            FLAGS="-DCMAKE_C_COMPILER='aarch64-linux-gnu-gcc' -DCMAKE_CXX_COMPILER='aarch64-linux-gnu-g++'"
+            echo "FLAGS='-DCMAKE_C_COMPILER=aarch64-linux-gnu-gcc -DCMAKE_CXX_COMPILER=aarch64-linux-gnu-g++'" >> $GITHUB_ENV
             sudo echo "http://archive.ubuntu.com/ubuntu/" | sudo tee /etc/apt/apt-mirrors.txt
             sudo echo "http://ports.ubuntu.com/ubuntu-ports/" | sudo tee -a /etc/apt/apt-mirrors.txt
             sudo dpkg --add-architecture arm64
@@ -49,7 +50,7 @@ jobs:
             echo "deb [arch=arm64] http://ports.ubuntu.com/ubuntu-ports/ noble-security main restricted universe multiverse" | sudo tee -a /etc/apt/sources.list
             sudo apt-get install -y gcc-aarch64-linux-gnu g++-aarch64-linux-gnu
           else
-            FLAGS=""
+            echo "FLAGS=''" >> $GITHUB_ENV
           fi
 
           sudo apt-get update
@@ -62,9 +63,10 @@ jobs:
 
       - name: Set up environment for Darwin.
         if: matrix.os == 'macos-latest'
+        shell: bash
         run: |
-          SUDO="sudo"
-          FLAGS="-DCMAKE_OSX_ARCHITECTURES=${{matrix.arch}}"
+          echo "SUDO='sudo'" >> $GITHUB_ENV
+          echo "FLAGS='-DCMAKE_OSX_ARCHITECTURES=${{matrix.arch}}'" >> $GITHUB_ENV
 
           if [ "${{matrix.arch}}" == "arm64" ]; then
             BREW="/opt/homebrew/bin/brew"
@@ -94,16 +96,17 @@ jobs:
 
       - name: Set up environment for Windows.
         if: matrix.os == 'windows-latest'
+        shell: bash
         run: |
-          SUDO=""
+          echo "SUDO=''" >> $GITHUB_ENV
 
           if [ "${{matrix.arch}}" == "arm64" ]; then
             echo "C:/msys64/clangarm64/bin" >> $GITHUB_PATH
             echo "C:/msys64/opt/aarch64-w64-mingw32/bin" >> $GITHUB_PATH
-            FLAGS="-DCMAKE_C_COMPILER='aarch64-w64-mingw32-clang' -DCMAKE_CXX_COMPILER='aarch64-w64-mingw32-clang++'"
+            echo "FLAGS='-DCMAKE_C_COMPILER=aarch64-w64-mingw32-clang -DCMAKE_CXX_COMPILER=aarch64-w64-mingw32-clang++'" >> $GITHUB_ENV
           else
             echo "C:/msys64/mingw64/bin" >> $GITHUB_PATH
-            FLAGS=""
+            echo "FLAGS=''" >> $GITHUB_ENV
           fi
 
       - name: Checkout SDL.
@@ -112,6 +115,7 @@ jobs:
           repository: libsdl-org/SDL
 
       - name: Build SDL.
+        shell: bash
         run: |
           cmake -B build -S . -DCMAKE_BUILD_TYPE=Release \
             -DCMAKE_SYSTEM_NAME=$RUNNER_OS -DCMAKE_SYSTEM_PROCESSOR="${{matrix.arch}}" $FLAGS
@@ -121,7 +125,7 @@ jobs:
       - name: Upload SDL build artifacts.
         uses: actions/upload-artifact@v4
         with:
-          name: ${{matrix.zip-arch}}-${{matrix.platform}}-SDL
+          name: ${{matrix.out-arch}}-${{matrix.platform}}-SDL
           path: |
             build
         continue-on-error: true
@@ -132,6 +136,7 @@ jobs:
           repository: libsdl-org/SDL_image
 
       - name: Build SDL_image.
+        shell: bash
         run: |
           cmake -B build -S . -DCMAKE_BUILD_TYPE=Release \
             -DCMAKE_SYSTEM_NAME=$RUNNER_OS -DCMAKE_SYSTEM_PROCESSOR="${{matrix.arch}}" $FLAGS
@@ -141,7 +146,7 @@ jobs:
       - name: Upload SDL_image build artifacts.
         uses: actions/upload-artifact@v4
         with:
-          name: ${{matrix.zip-arch}}-${{matrix.platform}}-SDL_image
+          name: ${{matrix.out-arch}}-${{matrix.platform}}-SDL_image
           path: |
             build
         continue-on-error: true
@@ -152,6 +157,7 @@ jobs:
           repository: libsdl-org/SDL_mixer
 
       - name: Build SDL_mixer.
+        shell: bash
         run: |
           cmake -B build -S . -DCMAKE_BUILD_TYPE=Release \
             -DCMAKE_SYSTEM_NAME=$RUNNER_OS -DCMAKE_SYSTEM_PROCESSOR="${{matrix.arch}}" $FLAGS
@@ -161,7 +167,7 @@ jobs:
       - name: Upload SDL_mixer build artifacts.
         uses: actions/upload-artifact@v4
         with:
-          name: ${{matrix.zip-arch}}-${{matrix.platform}}-SDL_mixer
+          name: ${{matrix.out-arch}}-${{matrix.platform}}-SDL_mixer
           path: |
             build
         continue-on-error: true
@@ -172,6 +178,7 @@ jobs:
           repository: libsdl-org/SDL_ttf
 
       - name: Build SDL_ttf.
+        shell: bash
         run: |
           cmake -B build -S . -DCMAKE_BUILD_TYPE=Release \
             -DCMAKE_SYSTEM_NAME=$RUNNER_OS -DCMAKE_SYSTEM_PROCESSOR="${{matrix.arch}}" $FLAGS
@@ -181,7 +188,7 @@ jobs:
       - name: Upload SDL_ttf build artifacts.
         uses: actions/upload-artifact@v4
         with:
-          name: ${{matrix.zip-arch}}-${{matrix.platform}}-SDL_ttf
+          name: ${{matrix.out-arch}}-${{matrix.platform}}-SDL_ttf
           path: |
             build
         continue-on-error: true
@@ -192,6 +199,7 @@ jobs:
           repository: libsdl-org/SDL_rtf
 
       - name: Build SDL_rtf.
+        shell: bash
         run: |
           cmake -B build -S . -DCMAKE_BUILD_TYPE=Release \
             -DCMAKE_SYSTEM_NAME=$RUNNER_OS -DCMAKE_SYSTEM_PROCESSOR="${{matrix.arch}}" $FLAGS
@@ -201,7 +209,7 @@ jobs:
       - name: Upload SDL_rtf build artifacts.
         uses: actions/upload-artifact@v4
         with:
-          name: ${{matrix.zip-arch}}-${{matrix.platform}}-SDL_rtf
+          name: ${{matrix.out-arch}}-${{matrix.platform}}-SDL_rtf
           path: |
             build
         continue-on-error: true
@@ -212,6 +220,7 @@ jobs:
           repository: libsdl-org/SDL_net
 
       - name: Build SDL_net.
+        shell: bash
         run: |
           cmake -B build -S . -DCMAKE_BUILD_TYPE=Release \
             -DCMAKE_SYSTEM_NAME=$RUNNER_OS -DCMAKE_SYSTEM_PROCESSOR="${{matrix.arch}}" $FLAGS
@@ -221,7 +230,7 @@ jobs:
       - name: Upload SDL_net build artifacts.
         uses: actions/upload-artifact@v4
         with:
-          name: ${{matrix.zip-arch}}-${{matrix.platform}}-SDL_net
+          name: ${{matrix.out-arch}}-${{matrix.platform}}-SDL_net
           path: |
             build
         continue-on-error: true
