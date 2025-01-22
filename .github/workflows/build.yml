@@ -80,28 +80,12 @@ jobs:
           arch -${{matrix.arch}} $BREW install cmake pkg-config ninja libsndfile libx11 libxext \
             portaudio libxrandr libxi libxkbcommon mesa freetype libxcb
 
-      - name: Set up MSYS2 MINGW64 for Windows.
-        if: matrix.os == 'windows-latest' && matrix.arch == 'x86_64'
-        uses: msys2/setup-msys2@v2
-        with:
-          msystem: mingw64
-          install: base-devel mingw-w64-x86_64-toolchain mingw-w64-x86_64-cmake mingw-w64-x86_64-ninja mingw-w64-x86_64-freetype
-          update: true
-
-      - name: Set up MSYS2 CLANGARM64 for Windows.
-        if: matrix.os == 'windows-latest' && matrix.arch == 'arm64'
-        uses: msys2/setup-msys2@v2
-        with:
-          msystem: clangarm64
-          install: base-devel mingw-w64-cross-clang mingw-w64-clang-aarch64-cmake mingw-w64-clang-aarch64-ninja mingw-w64-clang-aarch64-freetype
-          update: true
-
       - name: Set up environment for Windows.
         if: matrix.os == 'windows-latest'
         shell: bash
         run: |
           echo "SUDO=" >> $GITHUB_ENV
-          echo "GENERATOR=Visual Studio" >> $GITHUB_ENV
+          echo "GENERATOR=Visual Studio 17 2022" >> $GITHUB_ENV
 
           if [ "${{matrix.arch}}" == "arm64" ]; then
             echo "FLAGS=-A ARM64" >> $GITHUB_ENV
