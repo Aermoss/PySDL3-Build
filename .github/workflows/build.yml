@@ -38,7 +38,7 @@ jobs:
           echo "SUDO=sudo" >> $GITHUB_ENV
 
           if [ "${{matrix.arch}}" == "arm64" ]; then
-            echo "FLAGS=-DCMAKE_C_COMPILER=aarch64-linux-gnu-gcc -DCMAKE_CXX_COMPILER=aarch64-linux-gnu-g++" >> $GITHUB_ENV
+            echo "FLAGS=-DCMAKE_C_COMPILER=aarch64-linux-gnu-gcc" >> $GITHUB_ENV
             sudo echo "http://archive.ubuntu.com/ubuntu/" | sudo tee /etc/apt/apt-mirrors.txt
             sudo echo "http://ports.ubuntu.com/ubuntu-ports/" | sudo tee -a /etc/apt/apt-mirrors.txt
             sudo dpkg --add-architecture arm64
@@ -103,10 +103,10 @@ jobs:
           if [ "${{matrix.arch}}" == "arm64" ]; then
             echo "C:/msys64/clangarm64/bin" >> $GITHUB_PATH
             echo "C:/msys64/opt/aarch64-w64-mingw32/bin" >> $GITHUB_PATH
-            echo "FLAGS=-DCMAKE_C_COMPILER=aarch64-w64-mingw32-clang -DCMAKE_CXX_COMPILER=aarch64-w64-mingw32-clang++" >> $GITHUB_ENV
+            echo "FLAGS=-G \"MSYS Makefiles\" -DCMAKE_C_COMPILER=aarch64-w64-mingw32-clang" >> $GITHUB_ENV
           else
             echo "C:/msys64/mingw64/bin" >> $GITHUB_PATH
-            echo "FLAGS=" >> $GITHUB_ENV
+            echo "FLAGS=-G \"MSYS Makefiles\"" >> $GITHUB_ENV
           fi
 
       - name: Checkout SDL.
@@ -118,7 +118,7 @@ jobs:
         shell: bash
         run: |
           cmake -B build -S . -DCMAKE_BUILD_TYPE=Release \
-            -DCMAKE_SYSTEM_NAME=$RUNNER_OS -DCMAKE_SYSTEM_PROCESSOR="${{matrix.arch}}" $FLAGS
+            -DCMAKE_SYSTEM_NAME=${{matrix.platform}} -DCMAKE_SYSTEM_PROCESSOR=${{matrix.arch}} $FLAGS
           cmake --build build --config Release
           $SUDO cmake --install build
 
@@ -139,7 +139,7 @@ jobs:
         shell: bash
         run: |
           cmake -B build -S . -DCMAKE_BUILD_TYPE=Release \
-            -DCMAKE_SYSTEM_NAME=$RUNNER_OS -DCMAKE_SYSTEM_PROCESSOR="${{matrix.arch}}" $FLAGS
+            -DCMAKE_SYSTEM_NAME=${{matrix.platform}} -DCMAKE_SYSTEM_PROCESSOR=${{matrix.arch}} $FLAGS
           cmake --build build --config Release
           $SUDO cmake --install build
 
@@ -160,7 +160,7 @@ jobs:
         shell: bash
         run: |
           cmake -B build -S . -DCMAKE_BUILD_TYPE=Release \
-            -DCMAKE_SYSTEM_NAME=$RUNNER_OS -DCMAKE_SYSTEM_PROCESSOR="${{matrix.arch}}" $FLAGS
+            -DCMAKE_SYSTEM_NAME=${{matrix.platform}} -DCMAKE_SYSTEM_PROCESSOR=${{matrix.arch}} $FLAGS
           cmake --build build --config Release
           $SUDO cmake --install build
 
@@ -181,7 +181,7 @@ jobs:
         shell: bash
         run: |
           cmake -B build -S . -DCMAKE_BUILD_TYPE=Release \
-            -DCMAKE_SYSTEM_NAME=$RUNNER_OS -DCMAKE_SYSTEM_PROCESSOR="${{matrix.arch}}" $FLAGS
+            -DCMAKE_SYSTEM_NAME=${{matrix.platform}} -DCMAKE_SYSTEM_PROCESSOR=${{matrix.arch}} $FLAGS
           cmake --build build --config Release
           $SUDO cmake --install build
 
@@ -202,7 +202,7 @@ jobs:
         shell: bash
         run: |
           cmake -B build -S . -DCMAKE_BUILD_TYPE=Release \
-            -DCMAKE_SYSTEM_NAME=$RUNNER_OS -DCMAKE_SYSTEM_PROCESSOR="${{matrix.arch}}" $FLAGS
+            -DCMAKE_SYSTEM_NAME=${{matrix.platform}} -DCMAKE_SYSTEM_PROCESSOR=${{matrix.arch}} $FLAGS
           cmake --build build --config Release
           $SUDO cmake --install build
 
@@ -223,7 +223,7 @@ jobs:
         shell: bash
         run: |
           cmake -B build -S . -DCMAKE_BUILD_TYPE=Release \
-            -DCMAKE_SYSTEM_NAME=$RUNNER_OS -DCMAKE_SYSTEM_PROCESSOR="${{matrix.arch}}" $FLAGS
+            -DCMAKE_SYSTEM_NAME=${{matrix.platform}} -DCMAKE_SYSTEM_PROCESSOR=${{matrix.arch}} $FLAGS
           cmake --build build --config Release
           $SUDO cmake --install build
 
