@@ -87,16 +87,17 @@ jobs:
           echo "GENERATOR=Visual Studio 17 2022" >> $GITHUB_ENV
 
           if [ "${{matrix.arch}}" == "arm64" ]; then
-            echo "FLAGS=-A ARM64 -DSDLIMAGE_VENDORED=OFF -DSDLMIXER_VENDORED=OFF -DSDLTTF_VENDORED=OFF" >> $GITHUB_ENV
+            echo "FLAGS=-A ARM64" >> $GITHUB_ENV
           else
             echo "C:\msys64\mingw64\bin" >> $GITHUB_PATH
-            echo "FLAGS=-A x64 -DSDLIMAGE_VENDORED=OFF -DSDLMIXER_VENDORED=OFF -DSDLTTF_VENDORED=OFF" >> $GITHUB_ENV
+            echo "FLAGS=-A x64" >> $GITHUB_ENV
           fi
 
       - name: Checkout SDL.
         uses: actions/checkout@v4
         with:
           repository: libsdl-org/SDL
+          submodules: recursive
 
       - name: Build SDL.
         shell: bash
@@ -118,6 +119,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           repository: libsdl-org/SDL_image
+          submodules: recursive
 
       - name: Build SDL_image.
         shell: bash
@@ -139,6 +141,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           repository: libsdl-org/SDL_mixer
+          submodules: recursive
 
       - name: Build SDL_mixer.
         shell: bash
@@ -160,6 +163,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           repository: libsdl-org/SDL_ttf
+          submodules: recursive
 
       - name: Build SDL_ttf.
         shell: bash
@@ -181,6 +185,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           repository: libsdl-org/SDL_rtf
+          submodules: recursive
 
       - name: Build SDL_rtf.
         shell: bash
@@ -202,6 +207,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           repository: libsdl-org/SDL_net
+          submodules: recursive
 
       - name: Build SDL_net.
         shell: bash
