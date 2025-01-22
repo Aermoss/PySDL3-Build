@@ -93,10 +93,10 @@ jobs:
             libgme libogg freetype tiff --triplet ${{matrix.vcpkg-arch}}-windows
 
           if [ "${{matrix.arch}}" == "arm64" ]; then
-            echo "FLAGS=-A ARM64 DSDLIMAGE_VENDORED=OFF DSDLMIXER_VENDORED=OFF DSDLTTF_VENDORED=OFF" >> $GITHUB_ENV
+            echo "FLAGS=-A ARM64 -DSDLIMAGE_VENDORED=OFF -DSDLMIXER_VENDORED=OFF -DSDLTTF_VENDORED=OFF" >> $GITHUB_ENV
           else
             echo "C:\msys64\mingw64\bin" >> $GITHUB_PATH
-            echo "FLAGS=-A x64 DSDLIMAGE_VENDORED=OFF DSDLMIXER_VENDORED=OFF DSDLTTF_VENDORED=OFF" >> $GITHUB_ENV
+            echo "FLAGS=-A x64 -DSDLIMAGE_VENDORED=OFF -DSDLMIXER_VENDORED=OFF -DSDLTTF_VENDORED=OFF" >> $GITHUB_ENV
           fi
 
       - name: Checkout SDL.
