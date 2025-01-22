@@ -90,7 +90,7 @@ jobs:
           choco install pkgconfiglite
 
           vcpkg install aom opus opusfile libvorbis libpng libavif libjpeg-turbo \
-            libgme libogg freetype --triplet ${{matrix.vcpkg-arch}}-windows
+            libgme libogg freetype tiff --triplet ${{matrix.vcpkg-arch}}-windows
 
           if [ "${{matrix.arch}}" == "arm64" ]; then
             echo "FLAGS=-A ARM64" >> $GITHUB_ENV
