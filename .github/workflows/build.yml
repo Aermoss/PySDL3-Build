@@ -85,11 +85,8 @@ jobs:
         run: |
           echo "SUDO=" >> $GITHUB_ENV
           echo "GENERATOR=Visual Studio 17 2022" >> $GITHUB_ENV
-          echo "C:\Program Files\NASM" >> $GITHUB_PATH
+          echo "C:/Program Files/NASM" >> $GITHUB_PATH
           choco install nasm
-
-          ls "C:/Program Files/"
-          ls "C:/Program Files \(x86\)/"
 
           if [ "${{matrix.arch}}" == "arm64" ]; then
             echo "FLAGS=-A ARM64" >> $GITHUB_ENV
