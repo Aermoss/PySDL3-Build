@@ -55,12 +55,8 @@ jobs:
           fi
 
           sudo apt-get update
-          sudo apt-get install build-essential git make pkg-config cmake ninja-build gnome-desktop-testing libasound2-dev libpulse-dev \
-            libaudio-dev libjack-dev libsndio-dev libx11-dev libxext-dev libfreetype6-dev:${{matrix.apt-arch}} \
-            libxrandr-dev libxcursor-dev libxfixes-dev libxi-dev libxss-dev libfreetype6:${{matrix.apt-arch}} \
-            libxkbcommon-dev libdrm-dev libgbm-dev libgl1-mesa-dev libgles2-mesa-dev linux-libc-dev:${{matrix.apt-arch}} \
-            libegl1-mesa-dev libdbus-1-dev libibus-1.0-dev libudev-dev fcitx-libs-dev \
-            libpipewire-0.3-dev libwayland-dev libdecor-0-dev liburing-dev
+          sudo apt-get install build-essential pkg-config cmake \
+            libfreetype6-dev:${{matrix.apt-arch}} libfreetype6:${{matrix.apt-arch}} linux-libc-dev:${{matrix.apt-arch}}
 
       - name: Set up environment for Darwin.
         if: matrix.os == 'macos-latest'
@@ -77,8 +73,7 @@ jobs:
             BREW=/usr/local/bin/brew
           fi
 
-          arch -${{matrix.arch}} $BREW install cmake pkg-config ninja libsndfile libx11 libxext \
-            portaudio libxrandr libxi libxkbcommon mesa freetype libxcb
+          arch -${{matrix.arch}} $BREW install libsndfile portaudio libxrandr libxi libxkbcommon mesa
 
       - name: Set up environment for Windows.
         if: matrix.os == 'windows-latest'
@@ -88,10 +83,10 @@ jobs:
           echo "GENERATOR=Visual Studio 17 2022" >> $GITHUB_ENV
 
           if [ "${{matrix.arch}}" == "arm64" ]; then
-            echo "FLAGS=-A ARM64" >> $GITHUB_ENV
+            echo "FLAGS=-A ARM64 -DSDLIMAGE_VENDORED=OFF" >> $GITHUB_ENV
           else
             echo "C:\msys64\mingw64\bin" >> $GITHUB_PATH
-            echo "FLAGS=-A x64" >> $GITHUB_ENV
+            echo "FLAGS=-A x64 -DSDLIMAGE_VENDORED=OFF" >> $GITHUB_ENV
           fi
 
       - name: Checkout SDL.
