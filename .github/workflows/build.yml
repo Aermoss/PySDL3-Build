@@ -90,8 +90,8 @@ jobs:
           echo "C:/Program Files/NASM" >> $GITHUB_PATH
           choco install nasm
 
-          vcpkg install aom bzip2 expat fontconfig freetype gettext glib gmp harfbuzz icu4c tiff zlib \
-            jpeg libjpeg-turbo libogg libpng libtiff libvorbis libwebp openjpeg opus --triplet ${{matrix.vcpkg-arch}}-windows
+          vcpkg install aom bzip2 expat fontconfig freetype gettext glib gmp harfbuzz tiff zlib \
+            libjpeg-turbo libogg libpng libvorbis libwebp openjpeg opus --triplet ${{matrix.vcpkg-arch}}-windows
 
           if [ "${{matrix.arch}}" == "arm64" ]; then
             echo "FLAGS=-A ARM64" >> $GITHUB_ENV
