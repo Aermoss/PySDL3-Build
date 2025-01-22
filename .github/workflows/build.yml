@@ -89,8 +89,8 @@ jobs:
           echo "GENERATOR=Visual Studio 17 2022" >> $GITHUB_ENV
           choco install pkgconfiglite
 
-          vcpkg install aom opus opusfile libvorbis libpng libavif libjpeg-turbo \
-            libgme libogg freetype tiff --triplet ${{matrix.vcpkg-arch}}-windows
+          vcpkg install aom opus libvorbis libpng libavif libjpeg-turbo wavpack libwebp \
+            libgme libogg freetype tiff libxmp fluidsynth libusb --triplet ${{matrix.vcpkg-arch}}-windows
 
           if [ "${{matrix.arch}}" == "arm64" ]; then
             echo "FLAGS=-A ARM64 -DCMAKE_TOOLCHAIN_FILE=C:/vcpkg/scripts/buildsystems/vcpkg.cmake -DSDLIMAGE_VENDORED=OFF -DSDLMIXER_VENDORED=OFF -DSDLTTF_VENDORED=OFF" >> $GITHUB_ENV
