@@ -89,7 +89,7 @@ jobs:
           echo "GENERATOR=Visual Studio 17 2022" >> $GITHUB_ENV
           choco install pkgconfiglite
 
-          vcpkg install aom opus libvorbis libpng libavif libjpeg-turbo wavpack libwebp \
+          vcpkg install aom opus libvorbis libpng libavif libjpeg-turbo libwebp \
             libgme libogg freetype tiff libxmp fluidsynth libusb --triplet ${{matrix.vcpkg-arch}}-windows
 
           if [ "${{matrix.arch}}" == "arm64" ]; then
