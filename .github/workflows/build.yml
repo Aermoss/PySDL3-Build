@@ -34,6 +34,8 @@ jobs:
       - name: Set up environment for Linux.
         if: matrix.os == 'ubuntu-latest'
         run: |
+          SUDO="sudo"
+
           if [ "${{matrix.arch}}" == "arm64" ]; then
             FLAGS="-DCMAKE_C_COMPILER='aarch64-linux-gnu-gcc' -DCMAKE_CXX_COMPILER='aarch64-linux-gnu-g++'"
             sudo echo "http://archive.ubuntu.com/ubuntu/" | sudo tee /etc/apt/apt-mirrors.txt
@@ -61,6 +63,7 @@ jobs:
       - name: Set up environment for Darwin.
         if: matrix.os == 'macos-latest'
         run: |
+          SUDO="sudo"
           FLAGS="-DCMAKE_OSX_ARCHITECTURES=${{matrix.arch}}"
 
           if [ "${{matrix.arch}}" == "arm64" ]; then
@@ -73,7 +76,7 @@ jobs:
           arch -${{matrix.arch}} $BREW install cmake pkg-config ninja libsndfile libx11 libxext \
             portaudio libxrandr libxi libxkbcommon mesa freetype libxcb
 
-      - name: Set up MSYS2 for AMD64 Windows.
+      - name: Set up MSYS2 MINGW64 for Windows.
         if: matrix.os == 'windows-latest' && matrix.arch == 'x86_64'
         uses: msys2/setup-msys2@v2
         with:
@@ -81,7 +84,7 @@ jobs:
           install: base-devel mingw-w64-x86_64-toolchain mingw-w64-x86_64-cmake mingw-w64-x86_64-freetype
           update: true
 
-      - name: Set up MSYS2 for ARM64 Windows.
+      - name: Set up MSYS2 CLANGARM64 for Windows.
         if: matrix.os == 'windows-latest' && matrix.arch == 'arm64'
         uses: msys2/setup-msys2@v2
         with:
@@ -92,6 +95,8 @@ jobs:
       - name: Set up environment for Windows.
         if: matrix.os == 'windows-latest'
         run: |
+          SUDO=""
+
           if [ "${{matrix.arch}}" == "arm64" ]; then
             echo "C:/msys64/clangarm64/bin" >> $GITHUB_PATH
             echo "C:/msys64/opt/aarch64-w64-mingw32/bin" >> $GITHUB_PATH
@@ -106,23 +111,12 @@ jobs:
         with:
           repository: libsdl-org/SDL
 
-      - name: Build SDL for Linux or Darwin.
-        if: matrix.os == 'ubuntu-latest' || matrix.os == 'macos-latest'
-        shell: bash
+      - name: Build SDL.
         run: |
           cmake -B build -S . -DCMAKE_BUILD_TYPE=Release \
             -DCMAKE_SYSTEM_NAME=$RUNNER_OS -DCMAKE_SYSTEM_PROCESSOR="${{matrix.arch}}" $FLAGS
           cmake --build build --config Release
-          sudo cmake --install build
-
-      - name: Build SDL for Windows.
-        if: matrix.os == 'windows-latest'
-        shell: msys2 {0}
-        run: |
-          cmake -B build -S . -DCMAKE_BUILD_TYPE=Release \
-            -DCMAKE_SYSTEM_NAME=$RUNNER_OS -DCMAKE_SYSTEM_PROCESSOR="${{matrix.arch}}" $FLAGS
-          cmake --build build --config Release
-          cmake --install build
+          $SUDO cmake --install build
 
       - name: Upload SDL build artifacts.
         uses: actions/upload-artifact@v4
@@ -137,23 +131,12 @@ jobs:
         with:
           repository: libsdl-org/SDL_image
 
-      - name: Build SDL_image for Linux or Darwin.
-        if: matrix.os == 'ubuntu-latest' || matrix.os == 'macos-latest'
-        shell: bash
+      - name: Build SDL_image.
         run: |
           cmake -B build -S . -DCMAKE_BUILD_TYPE=Release \
             -DCMAKE_SYSTEM_NAME=$RUNNER_OS -DCMAKE_SYSTEM_PROCESSOR="${{matrix.arch}}" $FLAGS
           cmake --build build --config Release
-          sudo cmake --install build
-
-      - name: Build SDL_image for Windows.
-        if: matrix.os == 'windows-latest'
-        shell: msys2 {0}
-        run: |
-          cmake -B build -S . -DCMAKE_BUILD_TYPE=Release \
-            -DCMAKE_SYSTEM_NAME=$RUNNER_OS -DCMAKE_SYSTEM_PROCESSOR="${{matrix.arch}}" $FLAGS
-          cmake --build build --config Release
-          cmake --install build
+          $SUDO cmake --install build
 
       - name: Upload SDL_image build artifacts.
         uses: actions/upload-artifact@v4
@@ -168,23 +151,12 @@ jobs:
         with:
           repository: libsdl-org/SDL_mixer
 
-      - name: Build SDL_mixer for Linux or Darwin.
-        if: matrix.os == 'ubuntu-latest' || matrix.os == 'macos-latest'
-        shell: bash
+      - name: Build SDL_mixer.
         run: |
           cmake -B build -S . -DCMAKE_BUILD_TYPE=Release \
             -DCMAKE_SYSTEM_NAME=$RUNNER_OS -DCMAKE_SYSTEM_PROCESSOR="${{matrix.arch}}" $FLAGS
           cmake --build build --config Release
-          sudo cmake --install build
-
-      - name: Build SDL_mixer for Windows.
-        if: matrix.os == 'windows-latest'
-        shell: msys2 {0}
-        run: |
-          cmake -B build -S . -DCMAKE_BUILD_TYPE=Release \
-            -DCMAKE_SYSTEM_NAME=$RUNNER_OS -DCMAKE_SYSTEM_PROCESSOR="${{matrix.arch}}" $FLAGS
-          cmake --build build --config Release
-          cmake --install build
+          $SUDO cmake --install build
 
       - name: Upload SDL_mixer build artifacts.
         uses: actions/upload-artifact@v4
@@ -199,23 +171,12 @@ jobs:
         with:
           repository: libsdl-org/SDL_ttf
 
-      - name: Build SDL_ttf for Linux or Darwin.
-        if: matrix.os == 'ubuntu-latest' || matrix.os == 'macos-latest'
-        shell: bash
+      - name: Build SDL_ttf.
         run: |
           cmake -B build -S . -DCMAKE_BUILD_TYPE=Release \
             -DCMAKE_SYSTEM_NAME=$RUNNER_OS -DCMAKE_SYSTEM_PROCESSOR="${{matrix.arch}}" $FLAGS
           cmake --build build --config Release
-          sudo cmake --install build
-
-      - name: Build SDL_ttf for Windows.
-        if: matrix.os == 'windows-latest'
-        shell: msys2 {0}
-        run: |
-          cmake -B build -S . -DCMAKE_BUILD_TYPE=Release \
-            -DCMAKE_SYSTEM_NAME=$RUNNER_OS -DCMAKE_SYSTEM_PROCESSOR="${{matrix.arch}}" $FLAGS
-          cmake --build build --config Release
-          cmake --install build
+          $SUDO cmake --install build
 
       - name: Upload SDL_ttf build artifacts.
         uses: actions/upload-artifact@v4
@@ -230,23 +191,12 @@ jobs:
         with:
           repository: libsdl-org/SDL_rtf
 
-      - name: Build SDL_rtf for Linux or Darwin.
-        if: matrix.os == 'ubuntu-latest' || matrix.os == 'macos-latest'
-        shell: bash
+      - name: Build SDL_rtf.
         run: |
           cmake -B build -S . -DCMAKE_BUILD_TYPE=Release \
             -DCMAKE_SYSTEM_NAME=$RUNNER_OS -DCMAKE_SYSTEM_PROCESSOR="${{matrix.arch}}" $FLAGS
           cmake --build build --config Release
-          sudo cmake --install build
-
-      - name: Build SDL_rtf for Windows.
-        if: matrix.os == 'windows-latest'
-        shell: msys2 {0}
-        run: |
-          cmake -B build -S . -DCMAKE_BUILD_TYPE=Release \
-            -DCMAKE_SYSTEM_NAME=$RUNNER_OS -DCMAKE_SYSTEM_PROCESSOR="${{matrix.arch}}" $FLAGS
-          cmake --build build --config Release
-          cmake --install build
+          $SUDO cmake --install build
 
       - name: Upload SDL_rtf build artifacts.
         uses: actions/upload-artifact@v4
@@ -261,23 +211,12 @@ jobs:
         with:
           repository: libsdl-org/SDL_net
 
-      - name: Build SDL_net for Linux or Darwin.
-        if: matrix.os == 'ubuntu-latest' || matrix.os == 'macos-latest'
-        shell: bash
+      - name: Build SDL_net.
         run: |
           cmake -B build -S . -DCMAKE_BUILD_TYPE=Release \
             -DCMAKE_SYSTEM_NAME=$RUNNER_OS -DCMAKE_SYSTEM_PROCESSOR="${{matrix.arch}}" $FLAGS
           cmake --build build --config Release
-          sudo cmake --install build
-
-      - name: Build SDL_net for Windows.
-        if: matrix.os == 'windows-latest'
-        shell: msys2 {0}
-        run: |
-          cmake -B build -S . -DCMAKE_BUILD_TYPE=Release \
-            -DCMAKE_SYSTEM_NAME=$RUNNER_OS -DCMAKE_SYSTEM_PROCESSOR="${{matrix.arch}}" $FLAGS
-          cmake --build build --config Release
-          cmake --install build
+          $SUDO cmake --install build
 
       - name: Upload SDL_net build artifacts.
         uses: actions/upload-artifact@v4
