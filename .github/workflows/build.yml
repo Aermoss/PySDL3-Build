@@ -101,16 +101,13 @@ jobs:
         shell: bash
         run: |
           echo "SUDO=" >> $GITHUB_ENV
+          echo "GENERATOR=Visual Studio" >> $GITHUB_ENV
 
           if [ "${{matrix.arch}}" == "arm64" ]; then
-            echo "C:\msys64\clangarm64\bin" >> $GITHUB_PATH
-            echo "C:\msys64\opt\aarch64-w64-mingw32\bin" >> $GITHUB_PATH
-            echo "FLAGS=-DCMAKE_C_COMPILER=aarch64-w64-mingw32-clang" >> $GITHUB_ENV
-            echo "GENERATOR=Unix Makefiles" >> $GITHUB_ENV
+            echo "FLAGS=-A ARM64" >> $GITHUB_ENV
           else
             echo "C:\msys64\mingw64\bin" >> $GITHUB_PATH
-            echo "GENERATOR=Visual Studio" >> $GITHUB_ENV
-            echo "FLAGS=" >> $GITHUB_ENV
+            echo "FLAGS=-A x64" >> $GITHUB_ENV
           fi
 
       - name: Checkout SDL.
