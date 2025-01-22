@@ -23,10 +23,12 @@ jobs:
             platform: Windows
 
           - arch: arm64
+            vcpkg-arch: arm64
             apt-arch: arm64
             out-arch: ARM64
 
           - arch: x86_64
+            vcpkg-arch: x64
             apt-arch: amd64
             out-arch: AMD64
 
@@ -55,7 +57,11 @@ jobs:
           fi
 
           sudo apt-get update
-          sudo apt-get install build-essential pkg-config cmake
+          sudo apt-get install build-essential pkg-config cmake libasound2-dev libpulse-dev libdecor-0-dev liburing-dev \
+            libaudio-dev libjack-dev libsndio-dev libx11-dev libxext-dev libfreetype6-dev:${{matrix.apt-arch}} \
+            libxrandr-dev libxcursor-dev libxfixes-dev libxi-dev libxss-dev libfreetype6:${{matrix.apt-arch}} \
+            libxkbcommon-dev libdrm-dev libgbm-dev libgl1-mesa-dev libgles2-mesa-dev linux-libc-dev:${{matrix.apt-arch}} \
+            libegl1-mesa-dev libdbus-1-dev libibus-1.0-dev libudev-dev fcitx-libs-dev libpipewire-0.3-dev libwayland-dev
 
       - name: Set up environment for Darwin.
         if: matrix.os == 'macos-latest'
@@ -72,6 +78,9 @@ jobs:
             BREW=/usr/local/bin/brew
           fi
 
+          arch -${{matrix.arch}} $BREW install libsndfile portaudio libxrandr libxi libxkbcommon mesa \
+            libogg libvorbis opus wavpack freetype libxmp fluid-synth webp libavif opusfile game-music-emu
+
       - name: Set up environment for Windows.
         if: matrix.os == 'windows-latest'
         shell: bash
@@ -80,6 +89,9 @@ jobs:
           echo "GENERATOR=Visual Studio 17 2022" >> $GITHUB_ENV
           echo "C:/Program Files/NASM" >> $GITHUB_PATH
           choco install nasm
+
+          vcpkg install aom opus opusfile libvorbis libpng libavif libjpeg-turbo \
+            libgme libogg freetype --triplet ${{matrix.vcpkg-arch}}-windows
 
           if [ "${{matrix.arch}}" == "arm64" ]; then
             echo "FLAGS=-A ARM64" >> $GITHUB_ENV
