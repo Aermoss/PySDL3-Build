@@ -92,7 +92,7 @@ jobs:
             echo "FLAGS=-A ARM64" >> $GITHUB_ENV
           else
             echo "C:\msys64\mingw64\bin" >> $GITHUB_PATH
-            echo "FLAGS=-A x64 -DAOM_TARGET_CPU=generic" >> $GITHUB_ENV
+            echo "FLAGS=-A x64" >> $GITHUB_ENV
           fi
 
       - name: Checkout SDL.
@@ -115,7 +115,6 @@ jobs:
           name: ${{matrix.out-arch}}-${{matrix.platform}}-SDL
           path: |
             build
-        continue-on-error: true
 
       - name: Checkout SDL_image.
         uses: actions/checkout@v4
@@ -137,7 +136,6 @@ jobs:
           name: ${{matrix.out-arch}}-${{matrix.platform}}-SDL_image
           path: |
             build
-        continue-on-error: true
 
       - name: Checkout SDL_mixer.
         uses: actions/checkout@v4
@@ -159,7 +157,6 @@ jobs:
           name: ${{matrix.out-arch}}-${{matrix.platform}}-SDL_mixer
           path: |
             build
-        continue-on-error: true
 
       - name: Checkout SDL_ttf.
         uses: actions/checkout@v4
@@ -181,7 +178,6 @@ jobs:
           name: ${{matrix.out-arch}}-${{matrix.platform}}-SDL_ttf
           path: |
             build
-        continue-on-error: true
       
       - name: Checkout SDL_rtf.
         uses: actions/checkout@v4
@@ -203,7 +199,6 @@ jobs:
           name: ${{matrix.out-arch}}-${{matrix.platform}}-SDL_rtf
           path: |
             build
-        continue-on-error: true
 
       - name: Checkout SDL_net.
         uses: actions/checkout@v4
@@ -225,4 +220,3 @@ jobs:
           name: ${{matrix.out-arch}}-${{matrix.platform}}-SDL_net
           path: |
             build
-        continue-on-error: true
