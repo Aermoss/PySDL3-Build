@@ -35,6 +35,7 @@ jobs:
         if: matrix.os == 'ubuntu-latest'
         run: |
           if [ "${{matrix.arch}}" == "arm64" ]; then
+            FLAGS="-DCMAKE_C_COMPILER='aarch64-linux-gnu-gcc' -DCMAKE_CXX_COMPILER='aarch64-linux-gnu-g++'"
             sudo echo "http://archive.ubuntu.com/ubuntu/" | sudo tee /etc/apt/apt-mirrors.txt
             sudo echo "http://ports.ubuntu.com/ubuntu-ports/" | sudo tee -a /etc/apt/apt-mirrors.txt
             sudo dpkg --add-architecture arm64
@@ -45,6 +46,8 @@ jobs:
             echo "deb [arch=amd64] http://archive.ubuntu.com/ubuntu/ noble-security main restricted universe multiverse" | sudo tee -a /etc/apt/sources.list
             echo "deb [arch=arm64] http://ports.ubuntu.com/ubuntu-ports/ noble-security main restricted universe multiverse" | sudo tee -a /etc/apt/sources.list
             sudo apt-get install -y gcc-aarch64-linux-gnu g++-aarch64-linux-gnu
+          else
+            FLAGS=""
           fi
 
           sudo apt-get update
@@ -58,23 +61,45 @@ jobs:
       - name: Set up environment for Darwin.
         if: matrix.os == 'macos-latest'
         run: |
+          FLAGS="-DCMAKE_OSX_ARCHITECTURES=${{matrix.arch}}"
+
           if [ "${{matrix.arch}}" == "arm64" ]; then
             BREW="/opt/homebrew/bin/brew"
           else
             arch -${{matrix.arch}} /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
             BREW="/usr/local/bin/brew"
           fi
-          
+
           arch -${{matrix.arch}} $BREW install cmake pkg-config ninja libsndfile libx11 libxext \
             portaudio libxrandr libxi libxkbcommon mesa freetype libxcb
 
-      - name: Set up environment for Windows.
+      - name: Set up MSYS2 for AMD64 Windows.
         if: matrix.os == 'windows-latest' && matrix.arch == 'x86_64'
         uses: msys2/setup-msys2@v2
         with:
           msystem: mingw64
           install: base-devel mingw-w64-x86_64-toolchain mingw-w64-x86_64-cmake mingw-w64-x86_64-freetype
           update: true
+
+      - name: Set up MSYS2 for ARM64 Windows.
+        if: matrix.os == 'windows-latest' && matrix.arch == 'arm64'
+        uses: msys2/setup-msys2@v2
+        with:
+          msystem: clangarm64
+          install: base-devel mingw-w64-cross-clang mingw-w64-clang-aarch64-cmake mingw-w64-clang-aarch64-freetype
+          update: true
+
+      - name: Set up environment for Windows.
+        if: matrix.os == 'windows-latest'
+        run: |
+          if [ "${{matrix.arch}}" == "arm64" ]; then
+            echo "C:/msys64/clangarm64/bin" >> $GITHUB_PATH
+            echo "C:/msys64/opt/aarch64-w64-mingw32/bin" >> $GITHUB_PATH
+            FLAGS="-DCMAKE_C_COMPILER='aarch64-w64-mingw32-clang' -DCMAKE_CXX_COMPILER='aarch64-w64-mingw32-clang++'"
+          else
+            echo "C:/msys64/mingw64/bin" >> $GITHUB_PATH
+            FLAGS=""
+          fi
 
       - name: Checkout SDL.
         uses: actions/checkout@v4
@@ -85,23 +110,17 @@ jobs:
         if: matrix.os == 'ubuntu-latest' || matrix.os == 'macos-latest'
         shell: bash
         run: |
-          if [ "$RUNNER_OS" == "Linux" ] && [ "${{matrix.arch}}" == "arm64" ]; then
-            FLAGS="-DCMAKE_C_COMPILER='aarch64-linux-gnu-gcc' -DCMAKE_CXX_COMPILER='aarch64-linux-gnu-g++'"
-          elif [ "$RUNNER_OS" == "Darwin" ]; then
-            FLAGS="-DCMAKE_OSX_ARCHITECTURES=${{matrix.arch}}"
-          else
-            FLAGS=""
-          fi
-
-          cmake -B build -S . -DCMAKE_BUILD_TYPE=Release -DCMAKE_SYSTEM_PROCESSOR="${{matrix.arch}}" $FLAGS
+          cmake -B build -S . -DCMAKE_BUILD_TYPE=Release \
+            -DCMAKE_SYSTEM_NAME=$RUNNER_OS -DCMAKE_SYSTEM_PROCESSOR="${{matrix.arch}}" $FLAGS
           cmake --build build --config Release
           sudo cmake --install build
 
       - name: Build SDL for Windows.
-        if: matrix.os == 'windows-latest' && matrix.arch == 'x86_64'
+        if: matrix.os == 'windows-latest'
         shell: msys2 {0}
         run: |
-          cmake -B build -S . -DCMAKE_BUILD_TYPE=Release
+          cmake -B build -S . -DCMAKE_BUILD_TYPE=Release \
+            -DCMAKE_SYSTEM_NAME=$RUNNER_OS -DCMAKE_SYSTEM_PROCESSOR="${{matrix.arch}}" $FLAGS
           cmake --build build --config Release
           cmake --install build
 
@@ -122,23 +141,17 @@ jobs:
         if: matrix.os == 'ubuntu-latest' || matrix.os == 'macos-latest'
         shell: bash
         run: |
-          if [ "$RUNNER_OS" == "Linux" ] && [ "${{matrix.arch}}" == "arm64" ]; then
-            FLAGS="-DCMAKE_C_COMPILER='aarch64-linux-gnu-gcc' -DCMAKE_CXX_COMPILER='aarch64-linux-gnu-g++'"
-          elif [ "$RUNNER_OS" == "Darwin" ]; then
-            FLAGS="-DCMAKE_OSX_ARCHITECTURES='${{matrix.arch}}'"
-          else
-            FLAGS=""
-          fi
-
-          cmake -B build -S . -DCMAKE_BUILD_TYPE=Release -DCMAKE_SYSTEM_PROCESSOR="${{matrix.arch}}" $FLAGS
+          cmake -B build -S . -DCMAKE_BUILD_TYPE=Release \
+            -DCMAKE_SYSTEM_NAME=$RUNNER_OS -DCMAKE_SYSTEM_PROCESSOR="${{matrix.arch}}" $FLAGS
           cmake --build build --config Release
           sudo cmake --install build
 
       - name: Build SDL_image for Windows.
-        if: matrix.os == 'windows-latest' && matrix.arch == 'x86_64'
+        if: matrix.os == 'windows-latest'
         shell: msys2 {0}
         run: |
-          cmake -B build -S . -DCMAKE_BUILD_TYPE=Release
+          cmake -B build -S . -DCMAKE_BUILD_TYPE=Release \
+            -DCMAKE_SYSTEM_NAME=$RUNNER_OS -DCMAKE_SYSTEM_PROCESSOR="${{matrix.arch}}" $FLAGS
           cmake --build build --config Release
           cmake --install build
 
@@ -159,23 +172,17 @@ jobs:
         if: matrix.os == 'ubuntu-latest' || matrix.os == 'macos-latest'
         shell: bash
         run: |
-          if [ "$RUNNER_OS" == "Linux" ] && [ "${{matrix.arch}}" == "arm64" ]; then
-            FLAGS="-DCMAKE_C_COMPILER='aarch64-linux-gnu-gcc' -DCMAKE_CXX_COMPILER='aarch64-linux-gnu-g++'"
-          elif [ "$RUNNER_OS" == "Darwin" ]; then
-            FLAGS="-DCMAKE_OSX_ARCHITECTURES='${{matrix.arch}}'"
-          else
-            FLAGS=""
-          fi
-
-          cmake -B build -S . -DCMAKE_BUILD_TYPE=Release -DCMAKE_SYSTEM_PROCESSOR="${{matrix.arch}}" $FLAGS
+          cmake -B build -S . -DCMAKE_BUILD_TYPE=Release \
+            -DCMAKE_SYSTEM_NAME=$RUNNER_OS -DCMAKE_SYSTEM_PROCESSOR="${{matrix.arch}}" $FLAGS
           cmake --build build --config Release
           sudo cmake --install build
 
       - name: Build SDL_mixer for Windows.
-        if: matrix.os == 'windows-latest' && matrix.arch == 'x86_64'
+        if: matrix.os == 'windows-latest'
         shell: msys2 {0}
         run: |
-          cmake -B build -S . -DCMAKE_BUILD_TYPE=Release
+          cmake -B build -S . -DCMAKE_BUILD_TYPE=Release \
+            -DCMAKE_SYSTEM_NAME=$RUNNER_OS -DCMAKE_SYSTEM_PROCESSOR="${{matrix.arch}}" $FLAGS
           cmake --build build --config Release
           cmake --install build
 
@@ -196,23 +203,17 @@ jobs:
         if: matrix.os == 'ubuntu-latest' || matrix.os == 'macos-latest'
         shell: bash
         run: |
-          if [ "$RUNNER_OS" == "Linux" ] && [ "${{matrix.arch}}" == "arm64" ]; then
-            FLAGS="-DCMAKE_C_COMPILER='aarch64-linux-gnu-gcc' -DCMAKE_CXX_COMPILER='aarch64-linux-gnu-g++'"
-          elif [ "$RUNNER_OS" == "Darwin" ]; then
-            FLAGS="-DCMAKE_OSX_ARCHITECTURES='${{matrix.arch}}'"
-          else
-            FLAGS=""
-          fi
-
-          cmake -B build -S . -DCMAKE_BUILD_TYPE=Release -DCMAKE_SYSTEM_PROCESSOR="${{matrix.arch}}" $FLAGS
+          cmake -B build -S . -DCMAKE_BUILD_TYPE=Release \
+            -DCMAKE_SYSTEM_NAME=$RUNNER_OS -DCMAKE_SYSTEM_PROCESSOR="${{matrix.arch}}" $FLAGS
           cmake --build build --config Release
           sudo cmake --install build
 
       - name: Build SDL_ttf for Windows.
-        if: matrix.os == 'windows-latest' && matrix.arch == 'x86_64'
+        if: matrix.os == 'windows-latest'
         shell: msys2 {0}
         run: |
-          cmake -B build -S . -DCMAKE_BUILD_TYPE=Release
+          cmake -B build -S . -DCMAKE_BUILD_TYPE=Release \
+            -DCMAKE_SYSTEM_NAME=$RUNNER_OS -DCMAKE_SYSTEM_PROCESSOR="${{matrix.arch}}" $FLAGS
           cmake --build build --config Release
           cmake --install build
 
@@ -233,23 +234,17 @@ jobs:
         if: matrix.os == 'ubuntu-latest' || matrix.os == 'macos-latest'
         shell: bash
         run: |
-          if [ "$RUNNER_OS" == "Linux" ] && [ "${{matrix.arch}}" == "arm64" ]; then
-            FLAGS="-DCMAKE_C_COMPILER='aarch64-linux-gnu-gcc' -DCMAKE_CXX_COMPILER='aarch64-linux-gnu-g++'"
-          elif [ "$RUNNER_OS" == "Darwin" ]; then
-            FLAGS="-DCMAKE_OSX_ARCHITECTURES='${{matrix.arch}}'"
-          else
-            FLAGS=""
-          fi
-
-          cmake -B build -S . -DCMAKE_BUILD_TYPE=Release -DCMAKE_SYSTEM_PROCESSOR="${{matrix.arch}}" $FLAGS
+          cmake -B build -S . -DCMAKE_BUILD_TYPE=Release \
+            -DCMAKE_SYSTEM_NAME=$RUNNER_OS -DCMAKE_SYSTEM_PROCESSOR="${{matrix.arch}}" $FLAGS
           cmake --build build --config Release
           sudo cmake --install build
 
       - name: Build SDL_rtf for Windows.
-        if: matrix.os == 'windows-latest' && matrix.arch == 'x86_64'
+        if: matrix.os == 'windows-latest'
         shell: msys2 {0}
         run: |
-          cmake -B build -S . -DCMAKE_BUILD_TYPE=Release
+          cmake -B build -S . -DCMAKE_BUILD_TYPE=Release \
+            -DCMAKE_SYSTEM_NAME=$RUNNER_OS -DCMAKE_SYSTEM_PROCESSOR="${{matrix.arch}}" $FLAGS
           cmake --build build --config Release
           cmake --install build
 
@@ -270,23 +265,17 @@ jobs:
         if: matrix.os == 'ubuntu-latest' || matrix.os == 'macos-latest'
         shell: bash
         run: |
-          if [ "$RUNNER_OS" == "Linux" ] && [ "${{matrix.arch}}" == "arm64" ]; then
-            FLAGS="-DCMAKE_C_COMPILER='aarch64-linux-gnu-gcc' -DCMAKE_CXX_COMPILER='aarch64-linux-gnu-g++'"
-          elif [ "$RUNNER_OS" == "Darwin" ]; then
-            FLAGS="-DCMAKE_OSX_ARCHITECTURES='${{matrix.arch}}'"
-          else
-            FLAGS=""
-          fi
-
-          cmake -B build -S . -DCMAKE_BUILD_TYPE=Release -DCMAKE_SYSTEM_PROCESSOR="${{matrix.arch}}" $FLAGS
+          cmake -B build -S . -DCMAKE_BUILD_TYPE=Release \
+            -DCMAKE_SYSTEM_NAME=$RUNNER_OS -DCMAKE_SYSTEM_PROCESSOR="${{matrix.arch}}" $FLAGS
           cmake --build build --config Release
           sudo cmake --install build
 
       - name: Build SDL_net for Windows.
-        if: matrix.os == 'windows-latest' && matrix.arch == 'x86_64'
+        if: matrix.os == 'windows-latest'
         shell: msys2 {0}
         run: |
-          cmake -B build -S . -DCMAKE_BUILD_TYPE=Release
+          cmake -B build -S . -DCMAKE_BUILD_TYPE=Release \
+            -DCMAKE_SYSTEM_NAME=$RUNNER_OS -DCMAKE_SYSTEM_PROCESSOR="${{matrix.arch}}" $FLAGS
           cmake --build build --config Release
           cmake --install build
 
