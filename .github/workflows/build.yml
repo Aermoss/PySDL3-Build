@@ -23,10 +23,12 @@ jobs:
             platform: Windows
 
           - arch: arm64
+            vcpkg-arch: arm64
             apt-arch: arm64
             out-arch: ARM64
 
           - arch: x86_64
+            vcpkg-arch: x64
             apt-arch: amd64
             out-arch: AMD64
 
@@ -89,8 +91,7 @@ jobs:
           choco install nasm
 
           vcpkg install aom bzip2 expat fontconfig freetype gettext glib gmp harfbuzz icu4c tiff zlib \
-            jpeg libarchive libass libiconv libidn2 libjpeg-turbo libogg libpng libssh2 libtasn1 libtiff \
-            libvorbis libwebp libxml2 libzip lzo2 nettle nghttp2 openjpeg opus pcre pcre2 pixman
+            jpeg libjpeg-turbo libogg libpng libtiff libvorbis libwebp openjpeg opus --triplet ${{matrix.vcpkg-arch}}-windows
 
           if [ "${{matrix.arch}}" == "arm64" ]; then
             echo "FLAGS=-A ARM64" >> $GITHUB_ENV
