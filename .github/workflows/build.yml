@@ -36,6 +36,7 @@ jobs:
         shell: bash
         run: |
           echo "SUDO=sudo" >> $GITHUB_ENV
+          echo "GENERATOR=Unix Makefiles" >> $GITHUB_ENV
 
           if [ "${{matrix.arch}}" == "arm64" ]; then
             echo "FLAGS=-DCMAKE_C_COMPILER=aarch64-linux-gnu-gcc" >> $GITHUB_ENV
@@ -67,6 +68,7 @@ jobs:
         run: |
           echo "SUDO=sudo" >> $GITHUB_ENV
           echo "FLAGS=-DCMAKE_OSX_ARCHITECTURES=${{matrix.arch}}" >> $GITHUB_ENV
+          echo "GENERATOR=Unix Makefiles" >> $GITHUB_ENV
 
           if [ "${{matrix.arch}}" == "arm64" ]; then
             BREW=/opt/homebrew/bin/brew
@@ -104,8 +106,10 @@ jobs:
             echo "C:\msys64\clangarm64\bin" >> $GITHUB_PATH
             echo "C:\msys64\opt\aarch64-w64-mingw32\bin" >> $GITHUB_PATH
             echo "FLAGS=-DCMAKE_C_COMPILER=aarch64-w64-mingw32-clang" >> $GITHUB_ENV
+            echo "GENERATOR=Unix Makefiles" >> $GITHUB_ENV
           else
             echo "C:\msys64\mingw64\bin" >> $GITHUB_PATH
+            echo "GENERATOR=Visual Studio" >> $GITHUB_ENV
             echo "FLAGS=" >> $GITHUB_ENV
           fi
 
@@ -117,7 +121,7 @@ jobs:
       - name: Build SDL.
         shell: bash
         run: |
-          cmake -G "Unix Makefiles" -S . -B build -DCMAKE_BUILD_TYPE=Release \
+          cmake -G "$GENERATOR" -S . -B build -DCMAKE_BUILD_TYPE=Release \
             -DCMAKE_SYSTEM_NAME=${{matrix.platform}} -DCMAKE_SYSTEM_PROCESSOR=${{matrix.arch}} $FLAGS
           cmake --build build --config Release
           $SUDO cmake --install build
@@ -138,7 +142,7 @@ jobs:
       - name: Build SDL_image.
         shell: bash
         run: |
-          cmake -G "Unix Makefiles" -S . -B build -DCMAKE_BUILD_TYPE=Release \
+          cmake -G "$GENERATOR" -S . -B build -DCMAKE_BUILD_TYPE=Release \
             -DCMAKE_SYSTEM_NAME=${{matrix.platform}} -DCMAKE_SYSTEM_PROCESSOR=${{matrix.arch}} $FLAGS
           cmake --build build --config Release
           $SUDO cmake --install build
@@ -159,7 +163,7 @@ jobs:
       - name: Build SDL_mixer.
         shell: bash
         run: |
-          cmake -G "Unix Makefiles" -S . -B build -DCMAKE_BUILD_TYPE=Release \
+          cmake -G "$GENERATOR" -S . -B build -DCMAKE_BUILD_TYPE=Release \
             -DCMAKE_SYSTEM_NAME=${{matrix.platform}} -DCMAKE_SYSTEM_PROCESSOR=${{matrix.arch}} $FLAGS
           cmake --build build --config Release
           $SUDO cmake --install build
@@ -180,7 +184,7 @@ jobs:
       - name: Build SDL_ttf.
         shell: bash
         run: |
-          cmake -G "Unix Makefiles" -S . -B build -DCMAKE_BUILD_TYPE=Release \
+          cmake -G "$GENERATOR" -S . -B build -DCMAKE_BUILD_TYPE=Release \
             -DCMAKE_SYSTEM_NAME=${{matrix.platform}} -DCMAKE_SYSTEM_PROCESSOR=${{matrix.arch}} $FLAGS
           cmake --build build --config Release
           $SUDO cmake --install build
@@ -201,7 +205,7 @@ jobs:
       - name: Build SDL_rtf.
         shell: bash
         run: |
-          cmake -G "Unix Makefiles" -S . -B build -DCMAKE_BUILD_TYPE=Release \
+          cmake -G "$GENERATOR" -S . -B build -DCMAKE_BUILD_TYPE=Release \
             -DCMAKE_SYSTEM_NAME=${{matrix.platform}} -DCMAKE_SYSTEM_PROCESSOR=${{matrix.arch}} $FLAGS
           cmake --build build --config Release
           $SUDO cmake --install build
@@ -222,7 +226,7 @@ jobs:
       - name: Build SDL_net.
         shell: bash
         run: |
-          cmake -G "Unix Makefiles" -S . -B build -DCMAKE_BUILD_TYPE=Release \
+          cmake -G "$GENERATOR" -S . -B build -DCMAKE_BUILD_TYPE=Release \
             -DCMAKE_SYSTEM_NAME=${{matrix.platform}} -DCMAKE_SYSTEM_PROCESSOR=${{matrix.arch}} $FLAGS
           cmake --build build --config Release
           $SUDO cmake --install build
