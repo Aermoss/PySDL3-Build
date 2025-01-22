@@ -102,6 +102,11 @@ jobs:
 
           if [ "${{matrix.arch}}" == "arm64" ]; then
             echo "C:\msys64\clangarm64\bin" >> $GITHUB_PATH
+            ls C:\msys64\opt\aarch64-w64-mingw32\bin
+            ls C:\msys64\opt\aarch64-w64-mingw32
+            ls C:\msys64\opt
+            ls C:\msys64
+            ls C:\
             echo "FLAGS=-DCMAKE_C_COMPILER=C:\msys64\opt\aarch64-w64-mingw32\bin\aarch64-w64-mingw32-clang" >> $GITHUB_ENV
           else
             echo "C:\msys64\mingw64\bin" >> $GITHUB_PATH
