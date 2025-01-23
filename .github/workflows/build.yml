@@ -1,6 +1,8 @@
 name: Build
 
-on: [workflow_dispatch]
+on:
+  release:
+    types: [created]
 
 jobs:
   build:
@@ -199,11 +201,14 @@ jobs:
       - name: Merge build artifacs.
         shell: bash
         run: |
-          python merge.py
+          $SUDO python merge.py
 
-      - name: Upload build artifacts.
-        uses: actions/upload-artifact@v4
+      - name: Upload build artifacs.
+        uses: actions/upload-release-asset@v1
         with:
-          name: ${{matrix.platform}}-${{matrix.out-arch}}
-          path: |
-            artifacts
+          upload_url: ${{github.event.release.upload_url}}
+          asset_path: artifacts.zip
+          asset_name: ${{matrix.platform}}-${{matrix.arch}}-${{github.event.release.tag_name}}.zip
+          asset_content_type: application/zip
+        env:
+          GITHUB_TOKEN: ${{secrets.PERSONAL_ACCESS_TOKEN}}
