@@ -1,8 +1,8 @@
 import sys, os, shutil, platform
 
 def main(argv):
-    repos = ["SDL", "SDL_image", "SDL_mixer", "SDL_ttf", "SDL3_rtf", "SDL_net"]
-    binaries = ["SDL3", "SDL3_image", "SDL3_mixer", "SDL_ttf", "SDL3_rtf", "SDL_net"]
+    repos = ["SDL", "SDL_image", "SDL_mixer", "SDL_ttf", "SDL_rtf", "SDL_net"]
+    binaries = ["SDL3", "SDL3_image", "SDL3_mixer", "SDL3_ttf", "SDL3_rtf", "SDL3_net"]
     system, workDir = platform.system(), os.getcwd()
 
     if not os.path.exists(os.path.join(workDir, "artifacts")):
