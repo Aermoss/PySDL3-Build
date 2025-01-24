@@ -46,18 +46,19 @@ jobs:
           if [ "${{matrix.cmake-arch}}" == "arm64" ]; then
             echo "FLAGS=-DCMAKE_C_COMPILER=aarch64-linux-gnu-gcc" >> $GITHUB_ENV
             sudo dpkg --add-architecture arm64
-            echo "deb [arch=amd64] http://archive.ubuntu.com/ubuntu/ jammy main restricted universe multiverse" | sudo tee -a /etc/apt/sources.list
+            echo "deb [arch=amd64] http://archive.ubuntu.com/ubuntu/ jammy main restricted universe multiverse" | sudo tee /etc/apt/sources.list
             echo "deb [arch=arm64] http://ports.ubuntu.com/ubuntu-ports/ jammy main restricted universe multiverse" | sudo tee -a /etc/apt/sources.list
             echo "deb [arch=amd64] http://archive.ubuntu.com/ubuntu/ jammy-updates main restricted universe multiverse" | sudo tee -a /etc/apt/sources.list
             echo "deb [arch=arm64] http://ports.ubuntu.com/ubuntu-ports/ jammy-updates main restricted universe multiverse" | sudo tee -a /etc/apt/sources.list
-            echo "deb [arch=amd64] http://archive.ubuntu.com/ubuntu/ jammy-security main restricted universe multiverse" | sudo tee -a /etc/apt/sources.list
+            echo "deb [arch=amd64] http://security.ubuntu.com/ubuntu/ jammy-security main restricted universe multiverse" | sudo tee -a /etc/apt/sources.list
             echo "deb [arch=arm64] http://ports.ubuntu.com/ubuntu-ports/ jammy-security main restricted universe multiverse" | sudo tee -a /etc/apt/sources.list
+            sudo apt-get update
             sudo apt-get install -y gcc-aarch64-linux-gnu g++-aarch64-linux-gnu
           else
             echo "FLAGS=" >> $GITHUB_ENV
+            sudo apt-get update
           fi
 
-          sudo apt-get update
           sudo apt-get install build-essential pkg-config cmake libasound2-dev libpulse-dev libdecor-0-dev liburing-dev \
             libaudio-dev libjack-dev libsndio-dev libx11-dev libxext-dev libfreetype6-dev:${{matrix.apt-arch}} \
             libxrandr-dev libxcursor-dev libxfixes-dev libxi-dev libxss-dev libfreetype6:${{matrix.apt-arch}} \
