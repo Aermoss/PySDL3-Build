@@ -95,7 +95,7 @@ jobs:
           choco install pkgconfiglite
 
           vcpkg install aom opus libvorbis libpng libavif libjpeg-turbo libwebp \
-            libgme libogg freetype tiff libxmp fluidsynth libusb --triplet ${{matrix.vcpkg-arch}}-windows
+            libgme libogg freetype tiff libxmp fluidsynth libusb --triplet ${{matrix.vcpkg-arch}}-windows-static
 
           if [ "${{matrix.arch}}" == "arm64" ]; then
             echo "FLAGS=-A ARM64 -DCMAKE_TOOLCHAIN_FILE=C:/vcpkg/scripts/buildsystems/vcpkg.cmake -DSDLIMAGE_VENDORED=OFF -DSDLMIXER_VENDORED=OFF -DSDLTTF_VENDORED=OFF" >> $GITHUB_ENV
@@ -113,7 +113,7 @@ jobs:
         shell: bash
         run: |
           cd SDL
-          cmake -G "$GENERATOR" -S . -B build -DCMAKE_BUILD_TYPE=Release \
+          cmake -G "$GENERATOR" -S . -B build -DCMAKE_BUILD_TYPE=Release -DSTATIC_DEPENDENCIES=ON \
             -DCMAKE_SYSTEM_NAME=${{matrix.platform}} -DCMAKE_SYSTEM_PROCESSOR=${{matrix.arch}} $FLAGS
           cmake --build build --config Release
           $SUDO cmake --install build
@@ -128,7 +128,7 @@ jobs:
         shell: bash
         run: |
           cd SDL_image
-          cmake -G "$GENERATOR" -S . -B build -DCMAKE_BUILD_TYPE=Release \
+          cmake -G "$GENERATOR" -S . -B build -DCMAKE_BUILD_TYPE=Release -DSTATIC_DEPENDENCIES=ON \
             -DCMAKE_SYSTEM_NAME=${{matrix.platform}} -DCMAKE_SYSTEM_PROCESSOR=${{matrix.arch}} $FLAGS
           cmake --build build --config Release
           $SUDO cmake --install build
@@ -143,7 +143,7 @@ jobs:
         shell: bash
         run: |
           cd SDL_mixer
-          cmake -G "$GENERATOR" -S . -B build -DCMAKE_BUILD_TYPE=Release \
+          cmake -G "$GENERATOR" -S . -B build -DCMAKE_BUILD_TYPE=Release -DSTATIC_DEPENDENCIES=ON \
             -DCMAKE_SYSTEM_NAME=${{matrix.platform}} -DCMAKE_SYSTEM_PROCESSOR=${{matrix.arch}} $FLAGS
           cmake --build build --config Release
           $SUDO cmake --install build
@@ -158,7 +158,7 @@ jobs:
         shell: bash
         run: |
           cd SDL_ttf
-          cmake -G "$GENERATOR" -S . -B build -DCMAKE_BUILD_TYPE=Release \
+          cmake -G "$GENERATOR" -S . -B build -DCMAKE_BUILD_TYPE=Release -DSTATIC_DEPENDENCIES=ON \
             -DCMAKE_SYSTEM_NAME=${{matrix.platform}} -DCMAKE_SYSTEM_PROCESSOR=${{matrix.arch}} $FLAGS
           cmake --build build --config Release
           $SUDO cmake --install build
@@ -173,7 +173,7 @@ jobs:
         shell: bash
         run: |
           cd SDL_rtf
-          cmake -G "$GENERATOR" -S . -B build -DCMAKE_BUILD_TYPE=Release \
+          cmake -G "$GENERATOR" -S . -B build -DCMAKE_BUILD_TYPE=Release -DSTATIC_DEPENDENCIES=ON \
             -DCMAKE_SYSTEM_NAME=${{matrix.platform}} -DCMAKE_SYSTEM_PROCESSOR=${{matrix.arch}} $FLAGS
           cmake --build build --config Release
           $SUDO cmake --install build
@@ -188,7 +188,7 @@ jobs:
         shell: bash
         run: |
           cd SDL_net
-          cmake -G "$GENERATOR" -S . -B build -DCMAKE_BUILD_TYPE=Release \
+          cmake -G "$GENERATOR" -S . -B build -DCMAKE_BUILD_TYPE=Release -DSTATIC_DEPENDENCIES=ON \
             -DCMAKE_SYSTEM_NAME=${{matrix.platform}} -DCMAKE_SYSTEM_PROCESSOR=${{matrix.arch}} $FLAGS
           cmake --build build --config Release
           $SUDO cmake --install build
@@ -204,6 +204,7 @@ jobs:
           $SUDO python merge.py
 
       - name: Upload build artifacs.
+        if: github.event_name == 'release'
         uses: actions/upload-release-asset@v1
         with:
           upload_url: ${{github.event.release.upload_url}}
