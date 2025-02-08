@@ -80,6 +80,7 @@ jobs:
             BREW=/usr/local/bin/brew
           fi
 
+          arch -${{matrix.cmake-arch}} $BREW uninstall freetype
           arch -${{matrix.cmake-arch}} $BREW install --force cmake libsndfile portaudio libxrandr libxkbcommon \
             libxi mesa libogg libvorbis opus wavpack libxmp webp libavif opusfile game-music-emu nasm freetype
 
