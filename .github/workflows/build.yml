@@ -76,11 +76,11 @@ jobs:
           if [ "${{matrix.cmake-arch}}" == "arm64" ]; then
             BREW=/opt/homebrew/bin/brew
           else
+            arch -arm64 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/uninstall.sh)"
             arch -${{matrix.cmake-arch}} /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
             BREW=/usr/local/bin/brew
           fi
 
-          arch -${{matrix.cmake-arch}} $BREW uninstall --ignore-dependencies freetype
           arch -${{matrix.cmake-arch}} $BREW install --force cmake libsndfile portaudio libxrandr libxkbcommon \
             libxi mesa libogg libvorbis opus wavpack libxmp webp libavif opusfile game-music-emu nasm harfbuzz freetype
 
