@@ -80,7 +80,7 @@ jobs:
             BREW=/usr/local/bin/brew
           fi
 
-          arch -${{matrix.cmake-arch}} $BREW install libsndfile portaudio libxrandr libxi libxkbcommon mesa \
+          arch -${{matrix.cmake-arch}} $BREW install cmake libsndfile portaudio libxrandr libxi libxkbcommon mesa \
             libogg libvorbis opus wavpack freetype libxmp webp libavif opusfile game-music-emu nasm
 
       - name: Set up environment for Windows.
@@ -109,7 +109,7 @@ jobs:
         shell: bash
         run: |
           cd SDL
-          cmake -G "$GENERATOR" -S . -B build -DCMAKE_BUILD_TYPE=Release -DSDL_VENDORED=ON \
+          cmake -G "$GENERATOR" -S . -B build -DCMAKE_BUILD_TYPE=Release -DSDL_VENDORED=OFF \
             -DCMAKE_SYSTEM_NAME=${{matrix.system}} -DCMAKE_SYSTEM_PROCESSOR=${{matrix.cmake-arch}} $FLAGS
           cmake --build build --config Release
           $SUDO cmake --install build
@@ -125,7 +125,7 @@ jobs:
         shell: bash
         run: |
           cd SDL_image
-          cmake -G "$GENERATOR" -S . -B build -DCMAKE_BUILD_TYPE=Release -DSDLIMAGE_VENDORED=ON -DSDLIMAGE_DEPS_SHARED=OFF \
+          cmake -G "$GENERATOR" -S . -B build -DCMAKE_BUILD_TYPE=Release -DSDLIMAGE_VENDORED=OFF -DSDLIMAGE_DEPS_SHARED=OFF \
             -DCMAKE_SYSTEM_NAME=${{matrix.system}} -DCMAKE_SYSTEM_PROCESSOR=${{matrix.cmake-arch}} $FLAGS
           cmake --build build --config Release
           $SUDO cmake --install build
@@ -141,7 +141,7 @@ jobs:
         shell: bash
         run: |
           cd SDL_mixer
-          cmake -G "$GENERATOR" -S . -B build -DCMAKE_BUILD_TYPE=Release -DSDLMIXER_VENDORED=ON -DSDLMIXER_DEPS_SHARED=OFF \
+          cmake -G "$GENERATOR" -S . -B build -DCMAKE_BUILD_TYPE=Release -DSDLMIXER_VENDORED=OFF -DSDLMIXER_DEPS_SHARED=OFF \
             -DCMAKE_SYSTEM_NAME=${{matrix.system}} -DCMAKE_SYSTEM_PROCESSOR=${{matrix.cmake-arch}} $FLAGS
           cmake --build build --config Release
           $SUDO cmake --install build
@@ -157,7 +157,7 @@ jobs:
         shell: bash
         run: |
           cd SDL_ttf
-          cmake -G "$GENERATOR" -S . -B build -DCMAKE_BUILD_TYPE=Release -DSDLTTF_VENDORED=ON \
+          cmake -G "$GENERATOR" -S . -B build -DCMAKE_BUILD_TYPE=Release -DSDLTTF_VENDORED=OFF \
             -DCMAKE_SYSTEM_NAME=${{matrix.system}} -DCMAKE_SYSTEM_PROCESSOR=${{matrix.cmake-arch}} $FLAGS
           cmake --build build --config Release
           $SUDO cmake --install build
@@ -173,7 +173,7 @@ jobs:
         shell: bash
         run: |
           cd SDL_rtf
-          cmake -G "$GENERATOR" -S . -B build -DCMAKE_BUILD_TYPE=Release -DSDLRTF_VENDORED=ON \
+          cmake -G "$GENERATOR" -S . -B build -DCMAKE_BUILD_TYPE=Release -DSDLRTF_VENDORED=OFF \
             -DCMAKE_SYSTEM_NAME=${{matrix.system}} -DCMAKE_SYSTEM_PROCESSOR=${{matrix.cmake-arch}} $FLAGS
           cmake --build build --config Release
           $SUDO cmake --install build
@@ -189,7 +189,7 @@ jobs:
         shell: bash
         run: |
           cd SDL_net
-          cmake -G "$GENERATOR" -S . -B build -DCMAKE_BUILD_TYPE=Release -DSDLNET_VENDORED=ON \
+          cmake -G "$GENERATOR" -S . -B build -DCMAKE_BUILD_TYPE=Release -DSDLNET_VENDORED=OFF \
             -DCMAKE_SYSTEM_NAME=${{matrix.system}} -DCMAKE_SYSTEM_PROCESSOR=${{matrix.cmake-arch}} $FLAGS
           cmake --build build --config Release
           $SUDO cmake --install build
