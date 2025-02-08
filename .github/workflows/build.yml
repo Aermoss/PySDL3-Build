@@ -109,7 +109,7 @@ jobs:
         shell: bash
         run: |
           cd SDL
-          cmake -G "$GENERATOR" -S . -B build -DCMAKE_BUILD_TYPE=Release \
+          cmake -G "$GENERATOR" -S . -B build -DCMAKE_BUILD_TYPE=Release -DSDL_VENDORED=ON \
             -DCMAKE_SYSTEM_NAME=${{matrix.system}} -DCMAKE_SYSTEM_PROCESSOR=${{matrix.cmake-arch}} $FLAGS
           cmake --build build --config Release
           $SUDO cmake --install build
@@ -125,7 +125,7 @@ jobs:
         shell: bash
         run: |
           cd SDL_image
-          cmake -G "$GENERATOR" -S . -B build -DCMAKE_BUILD_TYPE=Release \
+          cmake -G "$GENERATOR" -S . -B build -DCMAKE_BUILD_TYPE=Release -DSDLIMAGE_VENDORED=ON \
             -DCMAKE_SYSTEM_NAME=${{matrix.system}} -DCMAKE_SYSTEM_PROCESSOR=${{matrix.cmake-arch}} $FLAGS
           cmake --build build --config Release
           $SUDO cmake --install build
@@ -141,7 +141,7 @@ jobs:
         shell: bash
         run: |
           cd SDL_mixer
-          cmake -G "$GENERATOR" -S . -B build -DCMAKE_BUILD_TYPE=Release \
+          cmake -G "$GENERATOR" -S . -B build -DCMAKE_BUILD_TYPE=Release -DSDLMIXER_VENDORED=ON \
             -DCMAKE_SYSTEM_NAME=${{matrix.system}} -DCMAKE_SYSTEM_PROCESSOR=${{matrix.cmake-arch}} $FLAGS
           cmake --build build --config Release
           $SUDO cmake --install build
@@ -157,7 +157,7 @@ jobs:
         shell: bash
         run: |
           cd SDL_ttf
-          cmake -G "$GENERATOR" -S . -B build -DCMAKE_BUILD_TYPE=Release \
+          cmake -G "$GENERATOR" -S . -B build -DCMAKE_BUILD_TYPE=Release -DSDLTTF_VENDORED=ON \
             -DCMAKE_SYSTEM_NAME=${{matrix.system}} -DCMAKE_SYSTEM_PROCESSOR=${{matrix.cmake-arch}} $FLAGS
           cmake --build build --config Release
           $SUDO cmake --install build
@@ -173,7 +173,7 @@ jobs:
         shell: bash
         run: |
           cd SDL_rtf
-          cmake -G "$GENERATOR" -S . -B build -DCMAKE_BUILD_TYPE=Release \
+          cmake -G "$GENERATOR" -S . -B build -DCMAKE_BUILD_TYPE=Release -DSDLRTF_VENDORED=ON \
             -DCMAKE_SYSTEM_NAME=${{matrix.system}} -DCMAKE_SYSTEM_PROCESSOR=${{matrix.cmake-arch}} $FLAGS
           cmake --build build --config Release
           $SUDO cmake --install build
@@ -189,7 +189,7 @@ jobs:
         shell: bash
         run: |
           cd SDL_net
-          cmake -G "$GENERATOR" -S . -B build -DCMAKE_BUILD_TYPE=Release \
+          cmake -G "$GENERATOR" -S . -B build -DCMAKE_BUILD_TYPE=Release -DSDLNET_VENDORED=ON \
             -DCMAKE_SYSTEM_NAME=${{matrix.system}} -DCMAKE_SYSTEM_PROCESSOR=${{matrix.cmake-arch}} $FLAGS
           cmake --build build --config Release
           $SUDO cmake --install build
