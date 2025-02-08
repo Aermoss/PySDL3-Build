@@ -44,7 +44,7 @@ jobs:
           echo "GENERATOR=Unix Makefiles" >> $GITHUB_ENV
 
           if [ "${{matrix.cmake-arch}}" == "arm64" ]; then
-            echo "FLAGS=-DCMAKE_LIBRARY_PATH=/usr/aarch64-linux-gnu/lib -DCMAKE_C_COMPILER=aarch64-linux-gnu-gcc" >> $GITHUB_ENV
+            echo "FLAGS=-DCMAKE_C_COMPILER=aarch64-linux-gnu-gcc" >> $GITHUB_ENV
             sudo dpkg --add-architecture arm64
             echo "deb [arch=amd64] http://security.ubuntu.com/ubuntu/ jammy main restricted universe multiverse" | sudo tee /etc/apt/sources.list
             echo "deb [arch=arm64] http://ports.ubuntu.com/ubuntu-ports/ jammy main restricted universe multiverse" | sudo tee -a /etc/apt/sources.list
@@ -80,8 +80,8 @@ jobs:
             BREW=/usr/local/bin/brew
           fi
 
-          arch -${{matrix.cmake-arch}} $BREW install cmake libsndfile portaudio libxrandr libxi libxkbcommon mesa \
-            libogg libvorbis opus wavpack freetype libxmp webp libavif opusfile game-music-emu nasm
+          arch -${{matrix.cmake-arch}} $BREW install --force cmake libsndfile portaudio libxrandr libxkbcommon \
+            libxi mesa libogg libvorbis opus wavpack libxmp webp libavif opusfile game-music-emu nasm freetype
 
       - name: Set up environment for Windows.
         if: matrix.system == 'Windows'
