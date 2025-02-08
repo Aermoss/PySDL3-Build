@@ -81,7 +81,7 @@ jobs:
           fi
 
           arch -${{matrix.cmake-arch}} $BREW install libsndfile portaudio libxrandr libxi libxkbcommon mesa \
-            libogg libvorbis opus wavpack freetype libxmp webp libavif opusfile game-music-emu
+            libogg libvorbis opus wavpack freetype libxmp webp libavif opusfile game-music-emu nasm
 
       - name: Set up environment for Windows.
         if: matrix.system == 'Windows'
