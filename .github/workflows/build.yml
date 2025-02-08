@@ -126,7 +126,7 @@ jobs:
         shell: bash
         run: |
           cd SDL_image
-          cmake -G "$GENERATOR" -S . -B build -DCMAKE_BUILD_TYPE=Release -DSDLIMAGE_DEPS_SHARED=OFF \
+          cmake -G "$GENERATOR" -S . -B build -DCMAKE_BUILD_TYPE=Release \
             -DCMAKE_SYSTEM_NAME=${{matrix.system}} -DCMAKE_SYSTEM_PROCESSOR=${{matrix.cmake-arch}} $FLAGS
           cmake --build build --config Release
           $SUDO cmake --install build
@@ -142,7 +142,7 @@ jobs:
         shell: bash
         run: |
           cd SDL_mixer
-          cmake -G "$GENERATOR" -S . -B build -DCMAKE_BUILD_TYPE=Release -DSDLMIXER_DEPS_SHARED=OFF \
+          cmake -G "$GENERATOR" -S . -B build -DCMAKE_BUILD_TYPE=Release \
             -DCMAKE_SYSTEM_NAME=${{matrix.system}} -DCMAKE_SYSTEM_PROCESSOR=${{matrix.cmake-arch}} $FLAGS
           cmake --build build --config Release
           $SUDO cmake --install build
