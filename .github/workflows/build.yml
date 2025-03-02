@@ -47,7 +47,6 @@ jobs:
         run: |
           echo "SUDO=sudo" >> $GITHUB_ENV
           echo "GENERATOR=Unix Makefiles" >> $GITHUB_ENV
-          $SUDO python -m pip install --upgrade sdl3
 
           if [ "${{matrix.cmake-arch}}" == "arm64" ]; then
             echo "FLAGS=-DCMAKE_C_COMPILER=aarch64-linux-gnu-gcc" >> $GITHUB_ENV
@@ -71,6 +70,8 @@ jobs:
             libxkbcommon-dev:${{matrix.apt-arch}} libdrm-dev:${{matrix.apt-arch}} libgbm-dev:${{matrix.apt-arch}} libgl1-mesa-dev:${{matrix.apt-arch}} libgles2-mesa-dev:${{matrix.apt-arch}} linux-libc-dev:${{matrix.apt-arch}} libjbig-dev:${{matrix.apt-arch}} \
             libegl1-mesa-dev:${{matrix.apt-arch}} libdbus-1-dev:${{matrix.apt-arch}} libibus-1.0-dev:${{matrix.apt-arch}} libudev-dev:${{matrix.apt-arch}} fcitx-libs-dev:${{matrix.apt-arch}} libpipewire-0.3-dev:${{matrix.apt-arch}} libwayland-dev:${{matrix.apt-arch}}
 
+          $SUDO python -m pip install --upgrade sdl3
+
       - name: Set up environment for Darwin.
         if: matrix.system == 'Darwin'
         shell: bash
@@ -78,7 +79,6 @@ jobs:
           echo "SUDO=sudo" >> $GITHUB_ENV
           echo "FLAGS=-DCMAKE_ASM_COMPILER=clang -DCMAKE_OSX_ARCHITECTURES=${{matrix.cmake-arch}}" >> $GITHUB_ENV
           echo "GENERATOR=Unix Makefiles" >> $GITHUB_ENV
-          $SUDO python -m pip install --upgrade sdl3
 
           if [ "${{matrix.cmake-arch}}" == "arm64" ]; then
             BREW=/opt/homebrew/bin/brew
@@ -91,6 +91,8 @@ jobs:
           arch -${{matrix.cmake-arch}} $BREW install --force cmake libsndfile portaudio libxrandr libxkbcommon \
             libxi mesa libogg libvorbis opus wavpack libxmp webp libavif opusfile game-music-emu nasm freetype
 
+          $SUDO python -m pip install --upgrade sdl3
+
       - name: Set up environment for Windows.
         if: matrix.system == 'Windows'
         shell: bash
@@ -98,7 +100,6 @@ jobs:
           echo "SUDO=" >> $GITHUB_ENV
           echo "GENERATOR=Visual Studio 17 2022" >> $GITHUB_ENV
           echo "C:/Program Files/NASM" >> $GITHUB_PATH
-          $SUDO python -m pip install --upgrade sdl3
           choco install pkgconfiglite nasm
 
           if [ "${{matrix.cmake-arch}}" == "arm64" ]; then
@@ -106,6 +107,8 @@ jobs:
           else
             echo "FLAGS=-A x64" >> $GITHUB_ENV
           fi
+
+          $SUDO python -m pip install --upgrade sdl3
 
       - name: Checkout modules.
         shell: bash
