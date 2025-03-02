@@ -11,8 +11,8 @@ def main(argv):
     for repo, release in asyncio.run(sdl3.SDL_GET_LATEST_RELEASES()).items():
         if repo not in os.listdir():
             print("\33[32m", f"info: cloning '{repo}'", f"with release '{release}'..." if release else "without any release...", "\33[0m", sep = "", flush = True)
-            subprocess.run(["git", "clone", f"https://github.com/libsdl-org/{repo}.git", "--recursive"], shell = True)
-            if release: subprocess.run(["git", "checkout", f"tags/{release}"], cwd = repo, shell = True)
+            subprocess.run(["git", "clone", f"https://github.com/libsdl-org/{repo}.git", "--recursive"], shell = sdl3.SYSTEM not in ["Darwin"])
+            if release: subprocess.run(["git", "checkout", f"tags/{release}"], cwd = repo, shell = sdl3.SYSTEM not in ["Darwin"])
 
         else:
             print("\33[35m", f"warning: passing '{repo}' because it already exists...", "\33[0m", sep = "", flush = True)
