@@ -70,7 +70,7 @@ jobs:
             libxkbcommon-dev:${{matrix.apt-arch}} libdrm-dev:${{matrix.apt-arch}} libgbm-dev:${{matrix.apt-arch}} libgl1-mesa-dev:${{matrix.apt-arch}} libgles2-mesa-dev:${{matrix.apt-arch}} linux-libc-dev:${{matrix.apt-arch}} libjbig-dev:${{matrix.apt-arch}} \
             libegl1-mesa-dev:${{matrix.apt-arch}} libdbus-1-dev:${{matrix.apt-arch}} libibus-1.0-dev:${{matrix.apt-arch}} libudev-dev:${{matrix.apt-arch}} fcitx-libs-dev:${{matrix.apt-arch}} libpipewire-0.3-dev:${{matrix.apt-arch}} libwayland-dev:${{matrix.apt-arch}}
 
-          $SUDO python -m pip install --upgrade sdl3
+          python -m pip install --upgrade sdl3
 
       - name: Set up environment for Darwin.
         if: matrix.system == 'Darwin'
@@ -91,7 +91,7 @@ jobs:
           arch -${{matrix.cmake-arch}} $BREW install --force cmake libsndfile portaudio libxrandr libxkbcommon \
             libxi mesa libogg libvorbis opus wavpack libxmp webp libavif opusfile game-music-emu nasm freetype
 
-          $SUDO python -m pip install --upgrade sdl3
+          python -m pip install --upgrade sdl3
 
       - name: Set up environment for Windows.
         if: matrix.system == 'Windows'
@@ -108,12 +108,12 @@ jobs:
             echo "FLAGS=-A x64" >> $GITHUB_ENV
           fi
 
-          $SUDO python -m pip install --upgrade sdl3
+          python -m pip install --upgrade sdl3
 
       - name: Checkout modules.
         shell: bash
         run: |
-          $SUDO python clone.py ${{github.event_name}}
+          python clone.py ${{github.event_name}}
         env:
           SDL_GITHUB_TOKEN: ${{secrets.PERSONAL_ACCESS_TOKEN}}
 
@@ -174,7 +174,7 @@ jobs:
       - name: Merge build artifacs.
         shell: bash
         run: |
-          $SUDO python merge.py ${{github.event_name}}
+          python merge.py ${{github.event_name}}
         env:
           SDL_GITHUB_TOKEN: ${{secrets.PERSONAL_ACCESS_TOKEN}}
 
