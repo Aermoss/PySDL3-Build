@@ -1,16 +1,22 @@
-import sys, os, shutil, platform, zipfile
+import sys, os
+
+os.environ["SDL_DISABLE_METADATA"] = "1"
+os.environ["SDL_DOWNLOAD_BINARIES"] = "0"
+os.environ["SDL_FIND_BINARIES"] = "0"
+
+import sdl3, shutil, zipfile
 
 def main(argv):
     repos = ["SDL", "SDL_image", "SDL_mixer", "SDL_ttf", "SDL_rtf", "SDL_net"]
     binaries = ["SDL3", "SDL3_image", "SDL3_mixer", "SDL3_ttf", "SDL3_rtf", "SDL3_net"]
-    system, workDir, outDir = platform.system(), os.getcwd(), "artifacts"
+    workDir, outDir = os.getcwd(), "artifacts"
 
     if not os.path.exists(os.path.join(workDir, outDir)):
         os.mkdir(os.path.join(workDir, outDir))
 
     for index, repo in enumerate(repos):
-        file = {"Windows": "{}.dll" , "Linux": "lib{}.so", "Darwin": "lib{}.dylib"}[system].format(binaries[index])
-        path = os.path.join(workDir, repo, "build", *(["Release", file] if system in ["Windows"] else [file]))
+        file = sdl3.SDL_BINARY_PATTERNS[sdl3.SDL_SYSTEM][0].format(binaries[index])
+        path = os.path.join(workDir, repo, "build", *(["Release", file] if sdl3.SDL_SYSTEM in ["Windows"] else [file]))
         shutil.copyfile(path, os.path.join(workDir, outDir, file))
 
     with zipfile.ZipFile(f"{outDir}.zip", "w", zipfile.ZIP_DEFLATED) as ref:

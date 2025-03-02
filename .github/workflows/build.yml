@@ -99,12 +99,17 @@ jobs:
             echo "FLAGS=-A x64" >> $GITHUB_ENV
           fi
 
-      - name: Checkout SDL.
-        uses: actions/checkout@v4
+      - name: Set up python.
+        uses: actions/setup-python@v5
         with:
-          repository: libsdl-org/SDL
-          submodules: 'recursive'
-          path: SDL
+          python-version: '3.13'
+
+      - name: Checkout modules.
+        shell: bash
+        run: |
+          $SUDO python clone.py ${{github.event_name}}
+        env:
+          SDL_GITHUB_TOKEN: ${{secrets.PERSONAL_ACCESS_TOKEN}}
 
       - name: Build SDL.
         shell: bash
@@ -115,13 +120,6 @@ jobs:
           cmake --build build --config Release
           $SUDO cmake --install build
 
-      - name: Checkout SDL_image.
-        uses: actions/checkout@v4
-        with:
-          repository: libsdl-org/SDL_image
-          submodules: 'recursive'
-          path: SDL_image
-
       - name: Build SDL_image.
         shell: bash
         run: |
@@ -130,13 +128,6 @@ jobs:
             -DCMAKE_SYSTEM_NAME=${{matrix.system}} -DCMAKE_SYSTEM_PROCESSOR=${{matrix.cmake-arch}} $FLAGS
           cmake --build build --config Release
           $SUDO cmake --install build
-
-      - name: Checkout SDL_mixer.
-        uses: actions/checkout@v4
-        with:
-          repository: libsdl-org/SDL_mixer
-          submodules: 'recursive'
-          path: SDL_mixer
 
       - name: Build SDL_mixer.
         shell: bash
@@ -147,13 +138,6 @@ jobs:
           cmake --build build --config Release
           $SUDO cmake --install build
 
-      - name: Checkout SDL_ttf.
-        uses: actions/checkout@v4
-        with:
-          repository: libsdl-org/SDL_ttf
-          submodules: 'recursive'
-          path: SDL_ttf
-
       - name: Build SDL_ttf.
         shell: bash
         run: |
@@ -162,13 +146,6 @@ jobs:
             -DCMAKE_SYSTEM_NAME=${{matrix.system}} -DCMAKE_SYSTEM_PROCESSOR=${{matrix.cmake-arch}} $FLAGS
           cmake --build build --config Release
           $SUDO cmake --install build
-      
-      - name: Checkout SDL_rtf.
-        uses: actions/checkout@v4
-        with:
-          repository: libsdl-org/SDL_rtf
-          submodules: 'recursive'
-          path: SDL_rtf
 
       - name: Build SDL_rtf.
         shell: bash
@@ -179,13 +156,6 @@ jobs:
           cmake --build build --config Release
           $SUDO cmake --install build
 
-      - name: Checkout SDL_net.
-        uses: actions/checkout@v4
-        with:
-          repository: libsdl-org/SDL_net
-          submodules: 'recursive'
-          path: SDL_net
-
       - name: Build SDL_net.
         shell: bash
         run: |
@@ -195,15 +165,12 @@ jobs:
           cmake --build build --config Release
           $SUDO cmake --install build
 
-      - name: Set up python.
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.13'
-
       - name: Merge build artifacs.
         shell: bash
         run: |
           $SUDO python merge.py ${{github.event_name}}
+        env:
+          SDL_GITHUB_TOKEN: ${{secrets.PERSONAL_ACCESS_TOKEN}}
 
       - name: Upload build artifacs.
         if: github.event_name == 'release'
