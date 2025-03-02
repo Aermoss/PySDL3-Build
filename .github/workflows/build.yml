@@ -36,12 +36,18 @@ jobs:
       - name: Checkout tools.
         uses: actions/checkout@v4
 
+      - name: Set up python.
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+
       - name: Set up environment for Linux.
         if: matrix.system == 'Linux'
         shell: bash
         run: |
           echo "SUDO=sudo" >> $GITHUB_ENV
           echo "GENERATOR=Unix Makefiles" >> $GITHUB_ENV
+          python -m pip install --upgrade sdl3
 
           if [ "${{matrix.cmake-arch}}" == "arm64" ]; then
             echo "FLAGS=-DCMAKE_C_COMPILER=aarch64-linux-gnu-gcc" >> $GITHUB_ENV
@@ -72,6 +78,7 @@ jobs:
           echo "SUDO=sudo" >> $GITHUB_ENV
           echo "FLAGS=-DCMAKE_ASM_COMPILER=clang -DCMAKE_OSX_ARCHITECTURES=${{matrix.cmake-arch}}" >> $GITHUB_ENV
           echo "GENERATOR=Unix Makefiles" >> $GITHUB_ENV
+          python -m pip install --upgrade sdl3
 
           if [ "${{matrix.cmake-arch}}" == "arm64" ]; then
             BREW=/opt/homebrew/bin/brew
@@ -91,6 +98,7 @@ jobs:
           echo "SUDO=" >> $GITHUB_ENV
           echo "GENERATOR=Visual Studio 17 2022" >> $GITHUB_ENV
           echo "C:/Program Files/NASM" >> $GITHUB_PATH
+          python -m pip install --upgrade sdl3
           choco install pkgconfiglite nasm
 
           if [ "${{matrix.cmake-arch}}" == "arm64" ]; then
@@ -98,11 +106,6 @@ jobs:
           else
             echo "FLAGS=-A x64" >> $GITHUB_ENV
           fi
-
-      - name: Set up python.
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.13'
 
       - name: Checkout modules.
         shell: bash
