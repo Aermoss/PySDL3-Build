@@ -126,6 +126,15 @@ jobs:
           cmake --build build --config Release
           $SUDO cmake --install build
 
+      - name: Build SDL_shadercross.
+        shell: bash
+        run: |
+          cd SDL_shadercross
+          cmake -G "$GENERATOR" -S . -B build -DCMAKE_BUILD_TYPE=Release \
+            -DCMAKE_SYSTEM_NAME=${{matrix.system}} -DCMAKE_SYSTEM_PROCESSOR=${{matrix.cmake-arch}} $FLAGS
+          cmake --build build --config Release
+          $SUDO cmake --install build
+
       - name: Build SDL_image.
         shell: bash
         run: |
