@@ -59,8 +59,8 @@ jobs:
             sudo apt-get update
           fi
 
-          sudo apt-get install -y build-essential pkg-config cmake nasm libasound2-dev:${{matrix.apt-arch}} libpulse-dev:${{matrix.apt-arch}} libdecor-0-dev:${{matrix.apt-arch}} liburing-dev:${{matrix.apt-arch}} \
-            libaudio-dev:${{matrix.apt-arch}} libjack-dev:${{matrix.apt-arch}} libsndio-dev:${{matrix.apt-arch}} libx11-dev:${{matrix.apt-arch}} libxext-dev:${{matrix.apt-arch}} libfreetype6-dev:${{matrix.apt-arch}} \
+          sudo apt-get install -y build-essential pkg-config cmake nasm libasound2-dev:${{matrix.apt-arch}} libpulse-dev:${{matrix.apt-arch}} libdecor-0-dev:${{matrix.apt-arch}} liburing-dev:${{matrix.apt-arch}} spirv-cross:${{matrix.apt-arch}} spirv-headers:${{matrix.apt-arch}} \
+            libaudio-dev:${{matrix.apt-arch}} libjack-dev:${{matrix.apt-arch}} libsndio-dev:${{matrix.apt-arch}} libx11-dev:${{matrix.apt-arch}} libxext-dev:${{matrix.apt-arch}} libfreetype6-dev:${{matrix.apt-arch}} spirv-tools:${{matrix.apt-arch}} \
             libxrandr-dev:${{matrix.apt-arch}} libxcursor-dev:${{matrix.apt-arch}} libxfixes-dev:${{matrix.apt-arch}} libxi-dev:${{matrix.apt-arch}} libxss-dev:${{matrix.apt-arch}} libfreetype6:${{matrix.apt-arch}} libjbig0:${{matrix.apt-arch}} \
             libxkbcommon-dev:${{matrix.apt-arch}} libdrm-dev:${{matrix.apt-arch}} libgbm-dev:${{matrix.apt-arch}} libgl1-mesa-dev:${{matrix.apt-arch}} libgles2-mesa-dev:${{matrix.apt-arch}} linux-libc-dev:${{matrix.apt-arch}} libjbig-dev:${{matrix.apt-arch}} \
             libegl1-mesa-dev:${{matrix.apt-arch}} libdbus-1-dev:${{matrix.apt-arch}} libibus-1.0-dev:${{matrix.apt-arch}} libudev-dev:${{matrix.apt-arch}} fcitx-libs-dev:${{matrix.apt-arch}} libpipewire-0.3-dev:${{matrix.apt-arch}} libwayland-dev:${{matrix.apt-arch}}
@@ -81,8 +81,8 @@ jobs:
             BREW=/usr/local/bin/brew
           fi
 
-          arch -${{matrix.cmake-arch}} $BREW install --force cmake libsndfile portaudio libxrandr libxkbcommon \
-            libxi mesa libogg libvorbis opus wavpack libxmp webp libavif opusfile game-music-emu nasm freetype
+          arch -${{matrix.cmake-arch}} $BREW install --force cmake libsndfile portaudio libxrandr libxkbcommon spirv-cross spirv-headers \
+            libxi mesa libogg libvorbis opus wavpack libxmp webp libavif opusfile game-music-emu nasm freetype spirv-tools dxc
 
       - name: Set up environment for Windows.
         if: matrix.system == 'Windows'
