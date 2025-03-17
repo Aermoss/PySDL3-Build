@@ -8,8 +8,7 @@ os.environ["SDL_FIND_BINARIES"] = "0"
 import sdl3, shutil, zipfile
 
 def main(argv):
-    repos = ["SDL", "SDL_image", "SDL_mixer", "SDL_ttf", "SDL_rtf", "SDL_net"]
-    binaries = ["SDL3", "SDL3_image", "SDL3_mixer", "SDL3_ttf", "SDL3_rtf", "SDL3_net"]
+    repos, binaries = sdl3.SDL_REPOSITORIES, list(sdl3.SDL_BINARY_VAR_MAP_INV.keys())
     workDir, outDir = os.getcwd(), "artifacts"
 
     if not os.path.exists(os.path.join(workDir, outDir)):
