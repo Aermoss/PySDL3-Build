@@ -18,7 +18,7 @@ def main(argv):
     for index, repo in enumerate(repos):
         file = sdl3.SDL_BINARY_PATTERNS[sdl3.SDL_SYSTEM][0].format(binaries[index])
         path = os.path.join(workDir, repo, "build", *(["Release", file] if sdl3.SDL_SYSTEM in ["Windows"] else [file]))
-        shutil.copyfile(path, os.path.join(workDir, outDir, file))
+        if os.path.exists(path): shutil.copyfile(path, os.path.join(workDir, outDir, file))
 
     with zipfile.ZipFile(f"{outDir}.zip", "w", zipfile.ZIP_DEFLATED) as ref:
         for root, _, files in os.walk(outDir):
