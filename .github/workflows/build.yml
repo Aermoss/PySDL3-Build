@@ -76,6 +76,7 @@ jobs:
           if [ "${{matrix.cmake-arch}}" == "arm64" ]; then
             BREW=/opt/homebrew/bin/brew
           else
+            rm -f /usr/local/bin/idle3
             arch -arm64 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/uninstall.sh)"
             arch -${{matrix.cmake-arch}} /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
             BREW=/usr/local/bin/brew
