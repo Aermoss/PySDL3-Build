@@ -76,14 +76,13 @@ jobs:
           if [ "${{matrix.cmake-arch}}" == "arm64" ]; then
             BREW=/opt/homebrew/bin/brew
           else
-            rm -f /usr/local/bin/idle3
             arch -arm64 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/uninstall.sh)"
             arch -${{matrix.cmake-arch}} /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
             BREW=/usr/local/bin/brew
           fi
 
-          arch -${{matrix.cmake-arch}} $BREW install --force cmake libsndfile portaudio libxrandr libxkbcommon spirv-cross spirv-headers \
-            libxi mesa libogg libvorbis opus wavpack libxmp webp libavif opusfile game-music-emu nasm freetype spirv-tools
+          arch -${{matrix.cmake-arch}} $BREW install cmake libsndfile portaudio libxrandr libxkbcommon spirv-cross spirv-headers spirv-tools \
+            libxi mesa libogg libvorbis opus wavpack libxmp webp libavif opusfile game-music-emu nasm freetype --force --overwrite || true
 
       - name: Set up environment for Windows.
         if: matrix.system == 'Windows'
