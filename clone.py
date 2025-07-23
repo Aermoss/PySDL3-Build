@@ -1,7 +1,5 @@
 import sys, os, subprocess
 
-import sdl3.SDL
-
 os.environ["SDL_DOC_GENERATOR"] = "0"
 os.environ["SDL_DISABLE_METADATA"] = "1"
 os.environ["SDL_CHECK_BINARY_VERSION"] = "0"

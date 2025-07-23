@@ -9,15 +9,14 @@ os.environ["SDL_FIND_BINARIES"] = "0"
 import sdl3, shutil, zipfile
 
 def main(argv):
-    repos, binaries = sdl3.SDL_REPOSITORIES, list(sdl3.SDL_BINARY_VAR_MAP_INV.keys())
     workDir, outDir = os.getcwd(), "artifacts"
 
     if not os.path.exists(os.path.join(workDir, outDir)):
         os.mkdir(os.path.join(workDir, outDir))
 
-    for index, repo in enumerate(repos):
-        file = sdl3.SDL_BINARY_PATTERNS[sdl3.SDL_SYSTEM][0].format(binaries[index])
-        path = os.path.join(workDir, repo, "build", *(["Release", file] if sdl3.SDL_SYSTEM in ["Windows"] else [file]))
+    for module in sdl3.SDL_MODULES:
+        file = sdl3.SDL_BINARY_PATTERNS[sdl3.SDL_SYSTEM][0].format(module)
+        path = os.path.join(workDir, module.replace("3", ""), "build", *(["Release", file] if sdl3.SDL_SYSTEM in ["Windows"] else [file]))
         if os.path.exists(path): shutil.copyfile(path, os.path.join(workDir, outDir, file))
 
     with zipfile.ZipFile(f"{outDir}.zip", "w", zipfile.ZIP_DEFLATED) as ref:
