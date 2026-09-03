@@ -231,6 +231,12 @@ jobs:
         env:
           SDL_GITHUB_TOKEN: ${{secrets.PERSONAL_ACCESS_TOKEN}}
 
+      - name: Attach artifacts to the CI run
+        uses: actions/upload-artifact@v7
+        with:
+          name: ${{matrix.system}}-${{matrix.arch}}-${{github.event.release.tag_name}}.zip
+          path: artifacts.zip
+
       - name: Upload build artifacs.
         if: github.event_name == 'release'
         uses: actions/upload-release-asset@v1
