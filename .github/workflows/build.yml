@@ -44,7 +44,7 @@ jobs:
           echo "GENERATOR=Unix Makefiles" >> $GITHUB_ENV
 
           if [ "${{matrix.cmake-arch}}" == "arm64" ]; then
-            echo "FLAGS=-DCMAKE_C_COMPILER=aarch64-linux-gnu-gcc" >> $GITHUB_ENV
+            echo "FLAGS=-DCMAKE_C_COMPILER=aarch64-linux-gnu-gcc -DCMAKE_CXX_COMPILER=aarch64-linux-gnu-g++" >> $GITHUB_ENV
             sudo dpkg --add-architecture arm64
             echo "deb [arch=amd64] http://security.ubuntu.com/ubuntu/ jammy main restricted universe multiverse" | sudo tee /etc/apt/sources.list
             echo "deb [arch=arm64] http://ports.ubuntu.com/ubuntu-ports/ jammy main restricted universe multiverse" | sudo tee -a /etc/apt/sources.list
