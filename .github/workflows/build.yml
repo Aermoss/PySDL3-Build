@@ -34,7 +34,7 @@ jobs:
 
     steps:
       - name: Checkout tools.
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Set up environment for Linux.
         if: matrix.system == 'Linux'
