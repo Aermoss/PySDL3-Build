@@ -44,7 +44,8 @@ jobs:
           echo "GENERATOR=Unix Makefiles" >> $GITHUB_ENV
 
           if [ "${{matrix.cmake-arch}}" == "arm64" ]; then
-            echo "FLAGS=-DCMAKE_C_COMPILER=aarch64-linux-gnu-gcc" >> $GITHUB_ENV
+            echo "PKG_CONFIG_LIBDIR=/usr/lib/aarch64-linux-gnu/pkgconfig:/usr/share/pkgconfig" >> $GITHUB_ENV
+            echo "FLAGS=-DCMAKE_C_COMPILER=aarch64-linux-gnu-gcc -DCMAKE_CXX_COMPILER=aarch64-linux-gnu-g++" >> $GITHUB_ENV
             sudo dpkg --add-architecture arm64
             echo "deb [arch=amd64] http://security.ubuntu.com/ubuntu/ jammy main restricted universe multiverse" | sudo tee /etc/apt/sources.list
             echo "deb [arch=arm64] http://ports.ubuntu.com/ubuntu-ports/ jammy main restricted universe multiverse" | sudo tee -a /etc/apt/sources.list
@@ -59,11 +60,45 @@ jobs:
             sudo apt-get update
           fi
 
-          sudo apt-get install -y build-essential pkg-config cmake nasm libasound2-dev:${{matrix.apt-arch}} libpulse-dev:${{matrix.apt-arch}} libdecor-0-dev:${{matrix.apt-arch}} liburing-dev:${{matrix.apt-arch}} spirv-cross:${{matrix.apt-arch}} \
-            libaudio-dev:${{matrix.apt-arch}} libjack-dev:${{matrix.apt-arch}} libsndio-dev:${{matrix.apt-arch}} libx11-dev:${{matrix.apt-arch}} libxext-dev:${{matrix.apt-arch}} libfreetype6-dev:${{matrix.apt-arch}} spirv-tools:${{matrix.apt-arch}} \
-            libxrandr-dev:${{matrix.apt-arch}} libxcursor-dev:${{matrix.apt-arch}} libxfixes-dev:${{matrix.apt-arch}} libxi-dev:${{matrix.apt-arch}} libxss-dev:${{matrix.apt-arch}} libfreetype6:${{matrix.apt-arch}} libjbig0:${{matrix.apt-arch}} libxtst-dev:${{matrix.apt-arch}} \
-            libxkbcommon-dev:${{matrix.apt-arch}} libdrm-dev:${{matrix.apt-arch}} libgbm-dev:${{matrix.apt-arch}} libgl1-mesa-dev:${{matrix.apt-arch}} libgles2-mesa-dev:${{matrix.apt-arch}} linux-libc-dev:${{matrix.apt-arch}} libjbig-dev:${{matrix.apt-arch}} \
-            libegl1-mesa-dev:${{matrix.apt-arch}} libdbus-1-dev:${{matrix.apt-arch}} libibus-1.0-dev:${{matrix.apt-arch}} libudev-dev:${{matrix.apt-arch}} fcitx-libs-dev:${{matrix.apt-arch}} libpipewire-0.3-dev:${{matrix.apt-arch}} libwayland-dev:${{matrix.apt-arch}}
+          sudo apt-get install -y \
+            build-essential \
+            pkg-config \
+            cmake \
+            nasm \
+            libasound2-dev:${{matrix.apt-arch}} \
+            libpulse-dev:${{matrix.apt-arch}} \
+            libdecor-0-dev:${{matrix.apt-arch}} \
+            liburing-dev:${{matrix.apt-arch}} \
+            spirv-cross:${{matrix.apt-arch}} \
+            libaudio-dev:${{matrix.apt-arch}} \
+            libjack-dev:${{matrix.apt-arch}} \
+            libsndio-dev:${{matrix.apt-arch}} \
+            libx11-dev:${{matrix.apt-arch}} \
+            libxext-dev:${{matrix.apt-arch}} \
+            libfreetype6-dev:${{matrix.apt-arch}} \
+            spirv-tools:${{matrix.apt-arch}} \
+            libxrandr-dev:${{matrix.apt-arch}} \
+            libxcursor-dev:${{matrix.apt-arch}} \
+            libxfixes-dev:${{matrix.apt-arch}} \
+            libxi-dev:${{matrix.apt-arch}} \
+            libxss-dev:${{matrix.apt-arch}} \
+            libfreetype6:${{matrix.apt-arch}} \
+            libjbig0:${{matrix.apt-arch}} \
+            libxtst-dev:${{matrix.apt-arch}} \
+            libxkbcommon-dev:${{matrix.apt-arch}} \
+            libdrm-dev:${{matrix.apt-arch}} \
+            libgbm-dev:${{matrix.apt-arch}} \
+            libgl1-mesa-dev:${{matrix.apt-arch}} \
+            libgles2-mesa-dev:${{matrix.apt-arch}} \
+            linux-libc-dev:${{matrix.apt-arch}} \
+            libjbig-dev:${{matrix.apt-arch}} \
+            libegl1-mesa-dev:${{matrix.apt-arch}} \
+            libdbus-1-dev:${{matrix.apt-arch}} \
+            libibus-1.0-dev:${{matrix.apt-arch}} \
+            libudev-dev:${{matrix.apt-arch}} \
+            fcitx-libs-dev:${{matrix.apt-arch}} \
+            libpipewire-0.3-dev:${{matrix.apt-arch}} \
+            libwayland-dev:${{matrix.apt-arch}}
 
       - name: Set up environment for Darwin.
         if: matrix.system == 'Darwin'
@@ -89,7 +124,7 @@ jobs:
         shell: bash
         run: |
           echo "SUDO=" >> $GITHUB_ENV
-          echo "GENERATOR=Visual Studio 17 2022" >> $GITHUB_ENV
+          echo "GENERATOR=Visual Studio 18 2026" >> $GITHUB_ENV
           echo "C:/Program Files/NASM" >> $GITHUB_PATH
           choco install pkgconfiglite nasm
 
@@ -121,8 +156,11 @@ jobs:
         shell: bash
         run: |
           cd SDL
-          cmake -G "$GENERATOR" -S . -B build -DCMAKE_BUILD_TYPE=Release \
-            -DCMAKE_SYSTEM_NAME=${{matrix.system}} -DCMAKE_SYSTEM_PROCESSOR=${{matrix.cmake-arch}} $FLAGS
+          cmake -G "$GENERATOR" -S . -B build \
+            -D CMAKE_BUILD_TYPE=Release \
+            -D CMAKE_SYSTEM_NAME=${{matrix.system}} \
+            -D CMAKE_SYSTEM_PROCESSOR=${{matrix.cmake-arch}} \
+            $FLAGS
           cmake --build build --config Release
           $SUDO cmake --install build
 
@@ -130,8 +168,11 @@ jobs:
         shell: bash
         run: |
           cd SDL_image
-          cmake -G "$GENERATOR" -S . -B build -DCMAKE_BUILD_TYPE=Release \
-            -DCMAKE_SYSTEM_NAME=${{matrix.system}} -DCMAKE_SYSTEM_PROCESSOR=${{matrix.cmake-arch}} $FLAGS
+          cmake -G "$GENERATOR" -S . -B build \
+            -D CMAKE_BUILD_TYPE=Release \
+            -D CMAKE_SYSTEM_NAME=${{matrix.system}} \
+            -D CMAKE_SYSTEM_PROCESSOR=${{matrix.cmake-arch}} \
+            $FLAGS
           cmake --build build --config Release
           $SUDO cmake --install build
 
@@ -139,8 +180,11 @@ jobs:
         shell: bash
         run: |
           cd SDL_mixer
-          cmake -G "$GENERATOR" -S . -B build -DCMAKE_BUILD_TYPE=Release \
-            -DCMAKE_SYSTEM_NAME=${{matrix.system}} -DCMAKE_SYSTEM_PROCESSOR=${{matrix.cmake-arch}} $FLAGS
+          cmake -G "$GENERATOR" -S . -B build \
+            -D CMAKE_BUILD_TYPE=Release \
+            -D CMAKE_SYSTEM_NAME=${{matrix.system}} \
+            -D CMAKE_SYSTEM_PROCESSOR=${{matrix.cmake-arch}} \
+            $FLAGS
           cmake --build build --config Release
           $SUDO cmake --install build
 
@@ -148,8 +192,11 @@ jobs:
         shell: bash
         run: |
           cd SDL_ttf
-          cmake -G "$GENERATOR" -S . -B build -DCMAKE_BUILD_TYPE=Release \
-            -DCMAKE_SYSTEM_NAME=${{matrix.system}} -DCMAKE_SYSTEM_PROCESSOR=${{matrix.cmake-arch}} $FLAGS
+          cmake -G "$GENERATOR" -S . -B build \
+            -D CMAKE_BUILD_TYPE=Release \
+            -D CMAKE_SYSTEM_NAME=${{matrix.system}} \
+            -D CMAKE_SYSTEM_PROCESSOR=${{matrix.cmake-arch}} \
+            $FLAGS
           cmake --build build --config Release
           $SUDO cmake --install build
 
@@ -157,8 +204,11 @@ jobs:
         shell: bash
         run: |
           cd SDL_rtf
-          cmake -G "$GENERATOR" -S . -B build -DCMAKE_BUILD_TYPE=Release \
-            -DCMAKE_SYSTEM_NAME=${{matrix.system}} -DCMAKE_SYSTEM_PROCESSOR=${{matrix.cmake-arch}} $FLAGS
+          cmake -G "$GENERATOR" -S . -B build \
+            -D CMAKE_BUILD_TYPE=Release \
+            -D CMAKE_SYSTEM_NAME=${{matrix.system}} \
+            -D CMAKE_SYSTEM_PROCESSOR=${{matrix.cmake-arch}} \
+            $FLAGS
           cmake --build build --config Release
           $SUDO cmake --install build
 
@@ -166,8 +216,11 @@ jobs:
         shell: bash
         run: |
           cd SDL_net
-          cmake -G "$GENERATOR" -S . -B build -DCMAKE_BUILD_TYPE=Release \
-            -DCMAKE_SYSTEM_NAME=${{matrix.system}} -DCMAKE_SYSTEM_PROCESSOR=${{matrix.cmake-arch}} $FLAGS
+          cmake -G "$GENERATOR" -S . -B build \
+            -D CMAKE_BUILD_TYPE=Release \
+            -D CMAKE_SYSTEM_NAME=${{matrix.system}} \
+            -D CMAKE_SYSTEM_PROCESSOR=${{matrix.cmake-arch}} \
+            $FLAGS
           cmake --build build --config Release
           $SUDO cmake --install build
 
@@ -177,6 +230,12 @@ jobs:
           python merge.py ${{github.event_name}}
         env:
           SDL_GITHUB_TOKEN: ${{secrets.PERSONAL_ACCESS_TOKEN}}
+
+      - name: Attach artifacts to the CI run
+        uses: actions/upload-artifact@v7
+        with:
+          name: ${{matrix.system}}-${{matrix.arch}}-${{github.event.release.tag_name}}.zip
+          path: artifacts.zip
 
       - name: Upload build artifacs.
         if: github.event_name == 'release'
